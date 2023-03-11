@@ -10,15 +10,7 @@ public class ConfigStub implements Config {
         this.config = config;
     }
 
-    @Override
-    public GeneratorStub getGenerator() {
-        return config.getGenerator();
-    }
 
-    @Override
-    public LoggerStub logger() {
-        return config.logger();
-    }
 
     @Override
     public String getKeyV1() {

@@ -1,11 +1,7 @@
 package com.nixiedroid.confg;
 
-import com.nixiedroid.logger.LoggerStub;
-import com.nixiedroid.sowftwareId.GeneratorStub;
 
 public interface Config {
-    GeneratorStub getGenerator();
-    LoggerStub logger();
     String getKeyV1();
     String getKeyV2();
     String getKeyV3();

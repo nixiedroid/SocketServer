@@ -6,8 +6,6 @@ import com.nixiedroid.sowftwareId.GeneratorStub;
 import com.nixiedroid.sowftwareId.SimpleGenerator;
 
 public class ConfigExample implements Config{
-    private static final LoggerStub LOGGER = new LoggerStub(new SoutLoggerImpl());
-    private static final GeneratorStub GENERATOR = new GeneratorStub(new SimpleGenerator());
     private static final String KEY_V6 = "66666666666666666666666666666666";
     private static final String KEY_V5 = "55555555555555555555555555555555";
     private static final String KEY_V4 = "44444444444444444444444444444444";
@@ -15,16 +13,6 @@ public class ConfigExample implements Config{
     private static final String KEY_V2 = "22222222222222222222222222222222";
     private static final String KEY_V1 = "11111111111111111111111111111111";
 
-    @Override
-    public GeneratorStub getGenerator() {
-        return GENERATOR;
-    }
-
-
-    @Override
-    public LoggerStub logger() {
-        return LOGGER;
-    }
 
     @Override
     public String getKeyV1() {

@@ -12,7 +12,7 @@ import com.nixiedroid.sowftwareId.Generator;
 public class Program {
     //Required valid ConfigStub
     public static Generator generator(){
-        return config.getGenerator();
+        return settings.getGenerator();
     }
     private static ServerSettingsStub settings = null;
     private static ConfigStub config = null;
@@ -29,7 +29,7 @@ public class Program {
     public static ServerSettings settings() { return settings; }
 
     public static Logger log(){
-        return config.logger();
+        return settings.logger();
     }
 
     public static void setConfig(ConfigStub config, ServerSettingsStub settings){
