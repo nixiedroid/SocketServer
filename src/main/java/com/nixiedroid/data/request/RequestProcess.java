@@ -3,7 +3,7 @@ package com.nixiedroid.data.request;
 import com.nixiedroid.data.Header;
 import com.nixiedroid.data.enums.PacketFlags;
 import com.nixiedroid.data.enums.RequestTypes;
-import com.nixiedroid.payload.PayloadHandler;
+import com.nixiedroid.data.payload.PayloadHandler;
 
 public class RequestProcess {
     public static byte[] handle(byte[] data,Header header){

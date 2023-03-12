@@ -1,6 +1,4 @@
 package com.nixiedroid.settings;
-
-import com.nixiedroid.PcSettings;
 import com.nixiedroid.logger.LoggerStub;
 import com.nixiedroid.sowftwareId.GeneratorStub;
 

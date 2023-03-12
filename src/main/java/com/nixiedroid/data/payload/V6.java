@@ -1,4 +1,4 @@
-package com.nixiedroid.payload;
+package com.nixiedroid.data.payload;
 
 import com.nixiedroid.AES.AES;
 import com.nixiedroid.AES.AesBlockModeImplementation;

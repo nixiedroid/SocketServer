@@ -7,6 +7,7 @@ import com.nixiedroid.util.UUID;
 import com.nixiedroid.data.enums.PacketFlags;
 import com.nixiedroid.data.enums.RequestTypes;
 
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,7 +37,14 @@ public class BindProcess {
             flags |= reqHeader.getFlags() & PacketFlags.MULTIPLEX.get();
             acknowledge.portLength = String.valueOf(Program.settings().getServerPort()).length() + 1;
             byte[] port = new byte[acknowledge.portLength];
-            System.arraycopy(Integer.toString(Program.settings().getServerPort()).getBytes(StandardCharsets.UTF_8), 0, port, 0, acknowledge.portLength -1);
+            String portStr = Integer.toString(Program.settings().getServerPort());
+            byte[] portShort;
+            try {
+                portShort = portStr.getBytes("UTF-8"); //StandartCharset-s are added to android 4.4
+            } catch ( UnsupportedEncodingException e){
+                throw new RuntimeException(e);
+            }
+            System.arraycopy(portShort, 0, port, 0, acknowledge.portLength -1);
             acknowledge.port = port;
             fragLen = (36 + request.payloadBind.uuidNum * UUIDItemResult.SIZE);
         } else if (reqHeader.getType() == RequestTypes.TYPE_ALTERCTX.getType()) {

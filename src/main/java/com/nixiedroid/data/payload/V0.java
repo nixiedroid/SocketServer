@@ -1,4 +1,4 @@
-package com.nixiedroid.payload;
+package com.nixiedroid.data.payload;
 
 
 public class V0 {

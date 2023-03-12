@@ -1,4 +1,4 @@
-package com.nixiedroid.payload;
+package com.nixiedroid.data.payload;
 
 import com.nixiedroid.util.ByteArrayUtils;
 import com.nixiedroid.data.Packable;
