@@ -8,49 +8,66 @@ import java.net.Socket;
 import java.util.LinkedList;
 
 public class Server {
-    public final static LinkedList<ClientThread> clientsList = new LinkedList<>();
-    static ServerSocket serverSocket = null;
-    static Socket clientSocket = null;
+    private static final Server instance = new Server();
+    private final LinkedList<ClientThread> clientsList = new LinkedList<>();
+    private ServerSocket serverSocket = null;
+    private Thread server;
 
-    public static void start() {
+    private Server() {
+    }
+
+    public static Server getInstance() { //Singleton pattern
+        return instance;
+    }
+
+    public void start() {//Starting new thread, which will actually do the job
+        server = new Thread(new Runnable() { //Thread can be stopped and started again.
+            @Override
+            public void run() {
+                serve();
+            }
+        });
+        server.start();
+    }
+
+    private void serve() {
         try {
             serverSocket = new ServerSocket(Program.settings().getServerPort());
             Program.log().info("Server started on port: " + Program.settings().getServerPort());
-            while (true) {
-                clientSocket = serverSocket.accept();
+            do {
+                Socket clientSocket = serverSocket.accept();
                 Program.log().info("Connection Accepted " + clientSocket.getInetAddress() + " : " + clientSocket.getPort());
                 ClientThread client = new ClientThread(clientSocket);
-                Watchdog wd = new Watchdog(client);
                 clientsList.add(client);
-            }
+            } while (!Thread.currentThread().isInterrupted());
         } catch (IOException e) {
-            Program.log().err("Server dead!");
-            Program.log().err(e.getMessage());
+            if (serverSocket.isClosed()) {
+                Program.log().info("Server closed");
+            } else {
+                Program.log().err("Server dead!");
+                Program.log().err(e.getMessage());
+            }
+
         } finally {
             try {
-                serverSocket.close();
+                if (serverSocket != null) serverSocket.close();
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
     }
 
-    public static void stop() {
-        Program.log().info("Exit");
-        if (serverSocket != null) {
-            try {
-            for (ClientThread client : clientsList) {
-                client.close();
-            }
+    public void stop() {
+        server.interrupt();
+        try {
             serverSocket.close();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-                }
-
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-    }
+        Program.log().info("Exit");
 
-    public static ServerSocket getServerSocket() {
-        return serverSocket;
+        for (ClientThread client : clientsList) {
+            client.close();
+        }
     }
 }

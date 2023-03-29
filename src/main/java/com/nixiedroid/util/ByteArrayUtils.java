@@ -181,6 +181,7 @@ public final class ByteArrayUtils {
         final char[] enc = encoded.toCharArray();
         for (int i = 0; i < enc.length; i += 2) {
             result[i / 2] = (byte) Integer.parseInt(String.valueOf(enc[i]) + enc[i + 1], 16);
+            //CAtch number format exception
         }
         return result;
     }

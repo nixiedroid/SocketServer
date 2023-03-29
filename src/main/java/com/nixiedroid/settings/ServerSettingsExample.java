@@ -3,12 +3,12 @@ package com.nixiedroid.settings;
 import com.nixiedroid.logger.LoggerStub;
 import com.nixiedroid.logger.SoutLoggerImpl;
 import com.nixiedroid.sowftwareId.GeneratorStub;
-import com.nixiedroid.sowftwareId.SimpleGenerator;
+import com.nixiedroid.sowftwareId.simpleGenerator.Generator;
 
 public class ServerSettingsExample implements ServerSettings {
     private String SOFTWARE_ID = null;
     private static final LoggerStub LOGGER = new LoggerStub(new SoutLoggerImpl());
-    private static final GeneratorStub GENERATOR = new GeneratorStub(new SimpleGenerator());
+    private static final GeneratorStub GENERATOR = new GeneratorStub(new Generator());
     private int PORT = 8080;
     private LogLevel LOGLEVEL = LogLevel.DEBUG;
     private int PING_TIME = 0x42; //MINUTES

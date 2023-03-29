@@ -9,7 +9,10 @@ import com.nixiedroid.data.Header;
 import com.nixiedroid.data.enums.PacketFlags;
 import com.nixiedroid.data.enums.RequestTypes;
 import com.nixiedroid.data.request.RequestProcess;
+import com.nixiedroid.util.ByteArrayUtils;
 import com.nixiedroid.util.UUID;
+
+import java.nio.charset.StandardCharsets;
 
 public class ClientDataProcess {
     public static byte[] generateRequest(){
@@ -63,6 +66,7 @@ public class ClientDataProcess {
         return requestBytes;
     }
     public static byte[] processRequest(byte[] data) {
+        if ((data.length - Header.SIZE)<0) return ByteArrayUtils.fromHexString("BAAD"); //TODO
         byte[] chunk = new byte[data.length - Header.SIZE];
         Header header = new Header(data);
         System.arraycopy(data, Header.SIZE, chunk, 0, chunk.length);
@@ -71,6 +75,8 @@ public class ClientDataProcess {
         } else
         if (header.getType()  == RequestTypes.TYPE_REQUEST.getType()) {
             return RequestProcess.handle(chunk, header);
-        } else throw new IllegalArgumentException("Invalid request type" + header.getType() );
+        } else {
+            return "Nothing Interesting".getBytes();
+        }
     }
 }

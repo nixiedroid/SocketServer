@@ -1,10 +1,5 @@
 package com.nixiedroid.confg;
 
-import com.nixiedroid.logger.LoggerStub;
-import com.nixiedroid.logger.SoutLoggerImpl;
-import com.nixiedroid.sowftwareId.GeneratorStub;
-import com.nixiedroid.sowftwareId.SimpleGenerator;
-
 public class ConfigExample implements Config{
     private static final String KEY_V6 = "66666666666666666666666666666666";
     private static final String KEY_V5 = "55555555555555555555555555555555";
