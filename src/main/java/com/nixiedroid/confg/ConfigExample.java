@@ -1,6 +1,6 @@
 package com.nixiedroid.confg;
 
-public class ConfigExample implements Config{
+public class ConfigExample extends ConfigStub{
     private static final String KEY_V6 = "66666666666666666666666666666666";
     private static final String KEY_V5 = "55555555555555555555555555555555";
     private static final String KEY_V4 = "44444444444444444444444444444444";

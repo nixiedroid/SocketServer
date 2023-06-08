@@ -1,11 +1,10 @@
-package com.nixiedroid.sowftwareId.simpleGenerator;
+package com.nixiedroid.sowftwareId;
 
 import com.nixiedroid.Program;
-import com.nixiedroid.sowftwareId.AbstractGenerator;
 import com.nixiedroid.util.ByteArrayUtils;
 import com.nixiedroid.util.UUID;
 
-public class Generator implements AbstractGenerator {
+public class SoftwareIDGenerator extends SoftwareIDGeneratorStub {
 
     @Override
     public byte[] getSoftwareID(UUID appId, int version) {

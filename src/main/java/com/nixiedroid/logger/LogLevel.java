@@ -1,4 +1,4 @@
-package com.nixiedroid.settings;
+package com.nixiedroid.logger;
 
 public enum LogLevel {
     DEBUG,

@@ -1,14 +1,11 @@
 package com.nixiedroid.settings;
 
-import com.nixiedroid.logger.LoggerStub;
-import com.nixiedroid.logger.SoutLoggerImpl;
-import com.nixiedroid.sowftwareId.GeneratorStub;
-import com.nixiedroid.sowftwareId.simpleGenerator.Generator;
+import com.nixiedroid.logger.LogLevel;
 
-public class ServerSettingsExample implements ServerSettings {
+
+public class SettingsExample extends SettingsStub {
     private String SOFTWARE_ID = null;
-    private static final LoggerStub LOGGER = new LoggerStub(new SoutLoggerImpl());
-    private static final GeneratorStub GENERATOR = new GeneratorStub(new Generator());
+
     private int PORT = 8080;
     private LogLevel LOGLEVEL = LogLevel.DEBUG;
     private int PING_TIME = 0x42; //MINUTES
@@ -16,16 +13,6 @@ public class ServerSettingsExample implements ServerSettings {
     private int CLIENT_COUNT = 25;
     private String HARDWARE_ID = "BAAAAAAAAAAAAAAD";
     private int LANG_CODE = 1033;
-
-    @Override
-    public GeneratorStub getGenerator() {
-        return GENERATOR;
-    }
-
-    @Override
-    public LoggerStub logger() {
-        return LOGGER;
-    }
 
     @Override
     public LogLevel getLevel() {

@@ -1,10 +1,8 @@
 package com.nixiedroid.logger;
 
-import com.nixiedroid.Program;
-import com.nixiedroid.settings.LogLevel;
 import com.nixiedroid.util.Date;
 
-public class SoutLoggerImpl implements Logger{
+public class OutputRoute extends OutputRouteStub{
     @Override
     public void err(String str) {
          System.err.println(Date.getDate() + " - [ERR] - " + str);

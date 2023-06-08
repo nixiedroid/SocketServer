@@ -21,7 +21,7 @@ public class Server {
     }
 
     public void start() {//Starting new thread, which will actually do the job
-        server = new Thread(new Runnable() { //Thread can be stopped and started again.
+        server = new Thread(new Runnable() {
             @Override
             public void run() {
                 serve();
