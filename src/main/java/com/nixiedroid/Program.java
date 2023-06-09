@@ -1,15 +1,16 @@
 package com.nixiedroid;
 
 
-import com.nixiedroid.confg.ConfigLoader;
-import com.nixiedroid.confg.ConfigStub;
-import com.nixiedroid.logger.Logger;
-import com.nixiedroid.logger.OutputRouteLoader;
+import com.nixiedroid.dynamic.confg.ConfigLoader;
+import com.nixiedroid.dynamic.confg.ConfigStub;
+import com.nixiedroid.dynamic.input.ConsoleInputReader;
+import com.nixiedroid.dynamic.logger.Logger;
+import com.nixiedroid.dynamic.logger.OutputRouteLoader;
 import com.nixiedroid.server.Server;
-import com.nixiedroid.settings.SettingsLoader;
-import com.nixiedroid.settings.SettingsStub;
-import com.nixiedroid.sowftwareId.SoftwareIDGeneratorStub;
-import com.nixiedroid.sowftwareId.SoftwareIDLoader;
+import com.nixiedroid.dynamic.settings.SettingsLoader;
+import com.nixiedroid.dynamic.settings.SettingsStub;
+import com.nixiedroid.dynamic.sowftwareId.SoftwareIDGeneratorStub;
+import com.nixiedroid.dynamic.sowftwareId.SoftwareIDLoader;
 
 public class Program {
     //Maybe reduce amount of byte[] allocations? There are over10000
@@ -19,20 +20,12 @@ public class Program {
     private static final String CUSTOM_CONFIG = "com.nixiedroid.custom.Config";
     private static final String CUSTOM_SETTINGS = "com.nixiedroid.custom.Settings";
 
-
     private static SoftwareIDGeneratorStub softwareIDGenerator = null;
     private static Logger logger = null;
     private static SettingsStub settings = null;
     private static ConfigStub config = null;
     private static final Server server = Server.getInstance();
-    private static boolean isCreated = false;
-    public static void start(){
-        server.start();
-        isCreated = true;
-    }
-    public static void stop() {
-        if (isCreated) server.stop();
-    }
+    private static boolean isInitialised = false;
 
     public static ConfigStub config(){
         return config;
@@ -45,26 +38,31 @@ public class Program {
         return softwareIDGenerator;
     }
 
-    public static void setConfig(ConfigStub config, SettingsStub settings){
-        if (Program.config == null) Program.config = config;
-        if (Program.settings == null) Program.settings = settings;
-    }
-    public static void setSoftwareIDGenerator(SoftwareIDGeneratorStub generator){
-        softwareIDGenerator = generator;
-    }
-    public static void setLogger (Logger logger){
-        Program.logger = logger;
-    }
-
 
     public static void main(String[] args) {
-        ConfigStub config = ConfigLoader.load(CUSTOM_CONFIG);
-        SettingsStub settings = SettingsLoader.load(CUSTOM_SETTINGS);
-        Program.setConfig(config,settings);
-        Program.setSoftwareIDGenerator(SoftwareIDLoader.load(CUSTOM_SID_GENERATOR));
-        Logger logger = new Logger(OutputRouteLoader.load(CUSTOM_OUTPUT_ROUTE));
-        Program.setLogger(logger);
+        loadDynamicModules();
         Program.start();
-        InputReader reader = new InputReader();
+        ConsoleInputReader reader = new ConsoleInputReader();
+    }
+    public static void init(){
+        loadDynamicModules();
+        Program.start();
+    }
+
+    public static void start(){
+        server.startServerThread();
+        isInitialised = true;
+    }
+    public static void stop() {
+        if (isInitialised) {
+            server.stop();
+        }
+    }
+
+    private static void loadDynamicModules(){
+        Program.config = ConfigLoader.load(CUSTOM_CONFIG);
+        Program.settings = SettingsLoader.load(CUSTOM_SETTINGS);
+        Program.softwareIDGenerator = SoftwareIDLoader.load(CUSTOM_SID_GENERATOR);
+        Program.logger = new Logger(OutputRouteLoader.load(CUSTOM_OUTPUT_ROUTE));
     }
 }

@@ -1,4 +1,4 @@
-package com.nixiedroid.sowftwareId;
+package com.nixiedroid.dynamic.sowftwareId;
 
 
 

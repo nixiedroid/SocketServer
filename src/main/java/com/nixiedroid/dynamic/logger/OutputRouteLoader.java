@@ -1,7 +1,4 @@
-package com.nixiedroid.logger;
-
-import com.nixiedroid.sowftwareId.SoftwareIDGenerator;
-import com.nixiedroid.sowftwareId.SoftwareIDGeneratorStub;
+package com.nixiedroid.dynamic.logger;
 
 public class OutputRouteLoader {
     public static OutputRouteStub load(String classname){

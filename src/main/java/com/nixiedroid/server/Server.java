@@ -20,17 +20,18 @@ public class Server {
         return instance;
     }
 
-    public void start() {//Starting new thread, which will actually do the job
+    public void startServerThread() {//Starting new thread, which will actually do the job
         server = new Thread(new Runnable() {
             @Override
             public void run() {
-                serve();
+                startServerThread();
             }
         });
         server.start();
     }
 
-    private void serve() {
+
+    private void startServer() {
         try {
             serverSocket = new ServerSocket(Program.settings().getServerPort());
             Program.log().info("Server started on port: " + Program.settings().getServerPort());

@@ -1,4 +1,4 @@
-package com.nixiedroid.confg;
+package com.nixiedroid.dynamic.confg;
 
 public class ConfigExample extends ConfigStub{
     private static final String KEY_V6 = "66666666666666666666666666666666";

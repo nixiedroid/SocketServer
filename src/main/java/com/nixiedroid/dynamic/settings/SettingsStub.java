@@ -1,5 +1,5 @@
-package com.nixiedroid.settings;
-import com.nixiedroid.logger.LogLevel;
+package com.nixiedroid.dynamic.settings;
+import com.nixiedroid.dynamic.logger.LogLevel;
 
 
 public abstract class SettingsStub {

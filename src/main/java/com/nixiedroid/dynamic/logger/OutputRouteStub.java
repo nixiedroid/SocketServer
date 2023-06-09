@@ -1,4 +1,4 @@
-package com.nixiedroid.logger;
+package com.nixiedroid.dynamic.logger;
 
 public abstract class OutputRouteStub {
 

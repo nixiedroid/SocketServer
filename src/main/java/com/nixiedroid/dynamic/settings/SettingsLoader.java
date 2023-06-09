@@ -1,4 +1,4 @@
-package com.nixiedroid.settings;
+package com.nixiedroid.dynamic.settings;
 
 
 public class SettingsLoader {

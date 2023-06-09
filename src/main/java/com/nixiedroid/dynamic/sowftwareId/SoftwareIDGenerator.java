@@ -1,4 +1,4 @@
-package com.nixiedroid.sowftwareId;
+package com.nixiedroid.dynamic.sowftwareId;
 
 import com.nixiedroid.Program;
 import com.nixiedroid.util.ByteArrayUtils;

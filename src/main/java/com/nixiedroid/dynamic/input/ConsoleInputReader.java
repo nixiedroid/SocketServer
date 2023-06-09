@@ -1,12 +1,14 @@
-package com.nixiedroid;
+package com.nixiedroid.dynamic.input;
+
+import com.nixiedroid.Program;
 
 import java.io.*;
 import java.util.Objects;
 
-public class InputReader extends Thread {
+public class ConsoleInputReader extends Thread {
     BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
 
-    public InputReader() {
+    public ConsoleInputReader() {
         start();
     }
 

@@ -1,4 +1,4 @@
-package com.nixiedroid.confg;
+package com.nixiedroid.dynamic.confg;
 
 
 public abstract class ConfigStub {

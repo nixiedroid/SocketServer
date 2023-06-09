@@ -1,4 +1,4 @@
-package com.nixiedroid.logger;
+package com.nixiedroid.dynamic.logger;
 
 import com.nixiedroid.util.Date;
 
