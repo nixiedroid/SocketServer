@@ -1,0 +1,8 @@
+rootProject.name = 'SocketServer'
+include 'real-plugin'
+include 'example-plugin'
+include 'core'
+include 'app'
+include 'rpc-impl'
+include 'aes'
+

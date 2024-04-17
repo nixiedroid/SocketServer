@@ -1,0 +1,25 @@
+plugins {
+    id 'java'
+}
+java {
+    sourceCompatibility = "5"
+    targetCompatibility = "5"
+    group = 'com.nixiedroid.rpc'
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(8)
+    }
+}
+
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
+test {
+    useJUnitPlatform()
+}
