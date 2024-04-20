@@ -2,6 +2,7 @@ package com.nixiedroid.rpc.data.Bind;
 
 import com.nixiedroid.rpc.util.ByteArrayUtils;
 import com.nixiedroid.rpc.data.BytePackable;
+import com.nixiedroid.rpc.util.Endiannes;
 import com.nixiedroid.rpc.util.UUID;
 
 
@@ -11,9 +12,9 @@ public class UUIDItem implements BytePackable {
     private int contextID;
     private int padding;
     private UUID abstractUUID = new UUID(new byte[16]);
-    private long abstractVer;
+    private int abstractVer;
     private UUID transferUUID = new UUID(new byte[16]);
-    private long transferVer;
+    private int transferVer;
     public UUIDItem(byte[] data) {
        deserialize(data,0);
     }
@@ -27,26 +28,26 @@ public class UUIDItem implements BytePackable {
 
     @Override
     public UUIDItem deserialize(byte[] data,int size) {
-        contextID = ByteArrayUtils.ranged.toUInt16L(data, 0);
+        contextID = ByteArrayUtils.toInt16(data, 0, Endiannes.LITTLE);
         items = data[2];
         padding = data[3];
         System.arraycopy(data, 4, abstractUUID.uuid, 0, 16);
-        abstractVer = ByteArrayUtils.ranged.toUInt32L(data, 20);
+        abstractVer = ByteArrayUtils.toInt32(data, 20, Endiannes.LITTLE);
         System.arraycopy(data, 24, transferUUID.uuid, 0, 16);
-        transferVer = ByteArrayUtils.ranged.toUInt32L(data, 40);
+        transferVer = ByteArrayUtils.toInt32(data, 40, Endiannes.LITTLE);
         return this;
     }
 
     @Override
     public byte[] serialize() {
         byte[] packed = new byte[size()];
-        System.arraycopy(ByteArrayUtils.uInt16ToBytesL(contextID),0,packed,0,2);
-        packed[2] = ByteArrayUtils.uByteToByte(items);
-        packed[3] = ByteArrayUtils.uByteToByte(padding);
+        System.arraycopy(ByteArrayUtils.toBytes(contextID),0,packed,0,2);
+        packed[2] = (byte) items;
+        packed[3] = (byte) padding;
         System.arraycopy(abstractUUID.uuid, 0, packed, 4, 16);
-        System.arraycopy(ByteArrayUtils.uInt32ToBytesL(abstractVer), 0, packed, 20, 4);
+        System.arraycopy(ByteArrayUtils.toBytes(abstractVer), 0, packed, 20, 4);
         System.arraycopy(transferUUID.uuid, 0, packed, 24, 16);
-        System.arraycopy(ByteArrayUtils.uInt32ToBytesL(transferVer), 0, packed, 40, 4);
+        System.arraycopy(ByteArrayUtils.toBytes(transferVer), 0, packed, 40, 4);
         return packed;
     }
 
@@ -75,7 +76,7 @@ public class UUIDItem implements BytePackable {
             item.abstractUUID = abstractUUID;
             return this;
         }
-        public Builder withAbstractVer(long ver){
+        public Builder withAbstractVer(int ver){
             item.abstractVer = ver;
             return this;
         }
@@ -83,7 +84,7 @@ public class UUIDItem implements BytePackable {
             item.transferUUID = transferUUID;
             return this;
         }
-        public Builder withTransferVer(long ver){
+        public Builder withTransferVer(int ver){
             item.transferVer = ver;
             return this;
         }

@@ -66,7 +66,7 @@ public class BindProcess {
                 .withRepresentation(reqHeader.getRepresentation())
                 .withAuthLen(reqHeader.getAuthLen())
                 .withCallId(reqHeader.getCallId())
-                .withFragLen(fragLen).build();
+                .withFragLen((short) fragLen).build();
 
         acknowledge.setHeader(ackHeader);
         acknowledge.maxTXLen = request.payloadBind.maxTXLen;

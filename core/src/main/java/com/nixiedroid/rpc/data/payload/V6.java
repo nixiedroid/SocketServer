@@ -15,7 +15,7 @@ import java.security.SecureRandom;
 import java.util.Random;
 
 public class V6 {
-    static byte[] key =  ByteArrayUtils.fromHexString(Program.config().getKeyV6());
+    static byte[] key =  ByteArrayUtils.fromString(Program.config().getKeyV6());
     static PayloadV5 encode(PayloadAck ack){
         //Objects
         AES aes;
@@ -25,7 +25,7 @@ public class V6 {
         final byte[] messageBytes = ack.serialize();
         int ackLen = messageBytes.length;
         int padding = 16 - (ackLen+88)%16;
-        byte[] hardwareId = ByteArrayUtils.fromHexString(Program.settings().getHardwareID());
+        byte[] hardwareId = ByteArrayUtils.fromString(Program.settings().getHardwareID());
         byte[] randomSalt = new byte[16];
         byte[] randomSalt2 = new byte[16];
         byte[] macSalt = new byte[16];
@@ -110,6 +110,6 @@ public class V6 {
         long i1 = (t / c1);
         long i2 = (i1 * c2);
         long seed = (i2 + c3);
-        return ByteArrayUtils.int64ToBytesL(seed);
+        return ByteArrayUtils.toBytes(seed);
     }
 }

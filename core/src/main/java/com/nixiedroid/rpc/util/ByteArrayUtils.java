@@ -1,247 +1,310 @@
 package com.nixiedroid.rpc.util;
 
-import java.math.BigInteger;
-@SuppressWarnings("unused")
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static com.nixiedroid.rpc.util.Endiannes.BIG;
+import static com.nixiedroid.rpc.util.Endiannes.LITTLE;
 
 public final class ByteArrayUtils {
-    public static class chunk {
-                //TO VALUES
-        //SIGNED PART
 
-
-        public static short toInt16B(byte[] b) {
-            return (short) ((b[1] & 0xFF) | (b[0] & 0xFF) << 8);
-        }
-
-        public static short toInt16L(byte[] b) {
-            return (short) ((b[0] & 0xFF) | (b[1] & 0xFF) << 8);
-        }
-
-        public static int toInt32B(byte[] b) {
-            return (b[3] & 0xFF) | (b[2] & 0xFF) << 8 | (b[1] & 0xFF) << 16 | (b[0] & 0xFF) << 24;
-        }
-
-        public static int toInt32L(byte[] b) {
-            return (b[0] & 0xFF) | (b[1] & 0xFF) << 8 | (b[2] & 0xFF) << 16 | (b[3] & 0xFF) << 24;
-        }
-
-        public static long toInt64B(byte[] b) {
-            return ((long) b[0] & 0xff) << 56 | ((long) b[1] & 0xff) << 48 | ((long) b[2] & 0xff) << 40 | ((long) b[3] & 0xff) << 32 | ((long) b[4] & 0xff) << 24 | ((long) b[5] & 0xff) << 16 | ((long) b[6] & 0xff) << 8 | ((long) b[7] & 0xff);
-        }
-
-        public static long toInt64L(byte[] b) {
-            return ((long) b[7] & 0xff) << 56 | ((long) b[6] & 0xff) << 48 | ((long) b[5] & 0xff) << 40 | ((long) b[4] & 0xff) << 32 | ((long) b[3] & 0xff) << 24 | ((long) b[2] & 0xff) << 16 | ((long) b[1] & 0xff) << 8 | ((long) b[0] & 0xff);
-        }
-
-
-        public static int toUInt16B(byte[] b) {
-            return (short) ((b[1] & 0xFF) | (b[0] & 0xFF) << 8);
-        }
-
-        public static int toUInt16L(byte[] b) {
-            return (short) ((b[0] & 0xFF) | (b[1] & 0xFF) << 8);
-        }
-
-        public static long toUInt32B(byte[] b) {
-            return (b[3] & 0xFF) | (b[2] & 0xFF) << 8 | (b[1] & 0xFF) << 16 | (b[0] & 0xFF) << 24;
-        }
-
-        public static long toUInt32L(byte[] b) {
-            return (b[0] & 0xFF) | (b[1] & 0xFF) << 8 | (b[2] & 0xFF) << 16 | (long) (b[3] & 0xFF) << 24;
-        }
-
-        public static BigInteger toUInt64L(byte[] b) {
-            return new BigInteger(reverse(b));
-        }
-
-        public static BigInteger toUInt64B(byte[] b) {
-            return new BigInteger(b);
-        }
+    private static final Pattern hexString = Pattern.compile("[0-9a-fA-F]+");
+    
+    public static byte[] toBytes(final byte b){
+        byte[] out = new  byte[Byte.BYTES];
+        toBytes(b,out);
+        return out;
     }
-    public static class ranged {
-
-        public static int toUInt8(byte[] b, int start){
-            return (b[start] & 0xff);
-        }
-        public static short toInt16B(byte[] b, int start) {
-            return (short) ((b[start+1] & 0xFF) | (b[start] & 0xFF) << 8);
-        }
-        public static short toInt16L(byte[] b,int start) {
-            return (short) ((b[start] & 0xFF) | (b[start+1] & 0xFF) << 8);
-        }
-        public static int toInt32B(byte[] b,int start) {
-            return (b[start+3] & 0xFF) | (b[start+2] & 0xFF) << 8 | (b[start+1] & 0xFF) << 16 | (b[start] & 0xFF) << 24;
-        }
-
-        public static int toInt32L(byte[] b,int start) {
-            return (b[start] & 0xFF) | (b[start+1] & 0xFF) << 8 | (b[start+2] & 0xFF) << 16 | (b[start+3] & 0xFF) << 24;
-        }
-
-        public static long toInt64B(byte[] b,int start) {
-            return ((long) b[start] & 0xff) << 56 | ((long) b[start+1] & 0xff) << 48 | ((long) b[start+2] & 0xff) << 40 | ((long) b[start+3] & 0xff) << 32 | ((long) b[start+4] & 0xff) << 24 | ((long) b[start+5] & 0xff) << 16 | ((long) b[start+6] & 0xff) << 8 | ((long) b[start+7] & 0xff);
-        }
-
-        public static long toInt64L(byte[] b,int start) {
-            return ((long) b[start+7] & 0xff) << 56 | ((long) b[start+6] & 0xff) << 48 | ((long) b[start+5] & 0xff) << 40 | ((long) b[start+4] & 0xff) << 32 | ((long) b[start+3] & 0xff) << 24 | ((long) b[start+2] & 0xff) << 16 | ((long) b[start+1] & 0xff) << 8 | ((long) b[start] & 0xff);
-        }
-
-
-        public static int toUInt16B(byte[] b,int start) {
-            return (short) ((b[start+ 1 ] & 0xFF) | (b[start] & 0xFF) << 8);
-        }
-
-        public static int toUInt16L(byte[] b,int start) {
-            return (short) ((b[start] & 0xFF) | (b[start+1] & 0xFF) << 8);
-        }
-
-        public static long toUInt32B(byte[] b,int start) {
-            return (b[start+3] & 0xFF) | (b[start+2] & 0xFF) << 8 | (b[start+1] & 0xFF) << 16 | (long) (b[start] & 0xFF) << 24;
-        }
-
-        public static long toUInt32L(byte[] b,int start) {
-            return (b[start] & 0xFF) | (b[start+1] & 0xFF) << 8 | (b[start+2] & 0xFF) << 16 | (long) (b[start + 3] & 0xFF) << 24;
-        }
-
-        public static BigInteger toUInt64L(byte[] b,int start) {
-            byte[] chunk = new byte[16];
-            System.arraycopy(b,start,chunk,0,16);
-            return new BigInteger(reverse(chunk));
-        }
-
-        public static BigInteger toUInt64B(byte[] b,int start) {
-            byte[] chunk = new byte[16];
-            System.arraycopy(b,start,chunk,0,16);
-            return new BigInteger(chunk);
-        }
+    public static void toBytes(final byte b,final byte[] dest){
+        toBytes(b,dest,0);
     }
-    // 32-bit integer 0x12345678
-    // would be stored in bytes as
-    // 0x12 0x34 0x56 0x78 (Big endian)
-    // 0x78 0x56 0x34 0x12 (Little endian)
-    //Number is 43981 (0xABCD)
-    //In BE it will be stored as ABCD
-    //In LE as CDAB
-    //Endiannes means location of THE HIGHEST byte (aka 12 in 1234)
-
-    //__MSB_________LSB
-    //_0x12__34__56__78
-
-    public static byte[] int16ToBytesB(short s) {
-        return new byte[]{(byte) ((s >> 8) & 0xFF), (byte) (s & 0xFF)};
-    }
-    public static byte[] int16ToBytesL(short s) {
-        return new byte[]{(byte) (s & 0xFF), (byte) ((s >> 8) & 0xFF)};
-    }
-    public static byte[] int32ToBytesB(int i) {
-        return new byte[]{(byte) ((i >> 24) & 0xFF), (byte) ((i >> 16) & 0xFF), (byte) ((i >> 8) & 0xFF), (byte) (i & 0xFF)};
-    }
-    public static byte[] int32ToBytesL(int i) {
-        return new byte[]{(byte) (i & 0xFF), (byte) ((i >> 8) & 0xFF), (byte) ((i >> 16) & 0xFF), (byte) ((i >> 24) & 0xFF)};
-    }
-    public static byte[] int64ToBytesB(long l) {
-        return new byte[]{(byte) ((l >> 56) & 0xFF), (byte) ((l >> 48) & 0xFF), (byte) ((l >> 40) & 0xFF), (byte) ((l >> 32) & 0xFF), (byte) ((l >> 24) & 0xFF), (byte) ((l >> 16) & 0xFF), (byte) ((l >> 8) & 0xFF), (byte) (l & 0xFF)};
-    }
-    public static byte[] int64ToBytesL(long l) {
-        return new byte[]{(byte) (l & 0xFF), (byte) ((l >> 8) & 0xFF), (byte) ((l >> 16) & 0xFF), (byte) ((l >> 24) & 0xFF), (byte) ((l >> 32) & 0xFF), (byte) ((l >> 40) & 0xFF), (byte) ((l >> 48) & 0xFF), (byte) ((l >> 56) & 0xFF)};
-    }
-    //UNSIGNED PART
-    //UByte stored in int (uInt16)
-    //UShort stored in int (uInt32)
-    //UInt aka ULong stored in long (uInt64)
-    //ULongLong stored in BigInteger
-    public static byte uByteToByte(int s) {
-        return (byte) (s & 0xFF);
-    }
-    public static byte[] uInt16ToBytesB(int s) {
-        return new byte[]{(byte) ((s >> 8) & 0xFF), (byte) (s & 0xFF)};
-    }
-    public static byte[] uInt16ToBytesL(int s) {
-        return new byte[]{(byte) (s & 0xFF), (byte) ((s >> 8) & 0xFF)};
-    }
-    public static byte[] uInt32ToBytesB(long i) {
-        return new byte[]{(byte) ((i >> 24) & 0xFF), (byte) ((i >> 16) & 0xFF), (byte) ((i >> 8) & 0xFF), (byte) (i & 0xFF)};
-    }
-    public static byte[] uInt32ToBytesL(long i) {
-        return new byte[]{(byte) (i & 0xFF), (byte) ((i >> 8) & 0xFF), (byte) ((i >> 16) & 0xFF), (byte) ((i >> 24) & 0xFF)};
-    }
-    public static byte[] uInt64ToBytesL(BigInteger l) {
-        return reverse(l.toByteArray());
-    }
-    public static byte[] uInt64ToBytesB(BigInteger l) {
-        return l.toByteArray();
+    public static void toBytes(final byte b,final byte[] dest,final int start){
+       dest[start] = b;
     }
 
-
-
-
-    public static byte[] fromHexString(final String encoded) {
-        if (encoded==null) return null;
-        if ((encoded.length() % 2) != 0) throw new IllegalArgumentException("Input string must contain an even number of characters");
-        final byte[] result = new byte[encoded.length() / 2];
-        final char[] enc = encoded.toCharArray();
-        for (int i = 0; i < enc.length; i += 2) {
-            result[i / 2] = (byte) Integer.parseInt(String.valueOf(enc[i]) + enc[i + 1], 16);
-            //CAtch number format exception
-        }
-        return result;
+    public static byte[] toBytes(final short s) {
+        return toBytes(s, LITTLE);
     }
-    public static byte[] xor(byte[] first, byte[] second){
-        if (first.length != second.length) throw new IllegalArgumentException("Arrays must have equal length");
-        byte[] out = new byte[first.length];
-        for (int i = 0; i< first.length;i++)
+    public static byte[] toBytes(final short s, final Endiannes endiannes) {
+        byte[] out = new byte[Short.BYTES];
+        toBytes(s, out, 0, endiannes);
+        return out;
+    }
+    public static void toBytes(final short s, final byte[] bytes, final Endiannes endiannes) {
+        toBytes(s,  bytes, 0, endiannes);
+    }
+    public static void toBytes(final short s, final byte[] bytes, final int start, final Endiannes endiannes) {
+        if (bytes == null || endiannes == null) throw new IllegalArgumentException();
+        switch (endiannes) {
+            case LITTLE:
+                 bytes[start] = (byte) (s & 0xFF);
+                 bytes[start + 1] = (byte) ((s >> 8) & 0xFF);
+                return;
+            case BIG:
+                 bytes[start] = (byte) ((s >> 8) & 0xFF);
+                 bytes[start + 1] = (byte) ((s) & 0xFF);
+        }
+    }
+
+    public static byte[] toBytes(final int i) {
+        return toBytes(i, LITTLE);
+    }
+    public static byte[] toBytes(final int i, final Endiannes endiannes) {
+        byte[] out = new byte[Integer.BYTES];
+        toBytes(i, out, 0, endiannes);
+        return out;
+    }
+    public static void toBytes(final int i, final byte[] bytes, final Endiannes endiannes) {
+        toBytes(i,  bytes, 0, endiannes);
+    }
+    public static void toBytes(final int i, final byte[] bytes, final int start, final Endiannes endiannes) {
+        if (bytes == null || endiannes == null) throw new IllegalArgumentException();
+        switch (endiannes) {
+            case LITTLE:
+                 bytes[start] = (byte) (i & 0xFF);
+                 bytes[start + 1] = (byte) ((i >> 8) & 0xFF);
+                 bytes[start + 2] = (byte) ((i >> 16) & 0xFF);
+                 bytes[start + 3] = (byte) ((i >> 24) & 0xFF);
+                return;
+            case BIG:
+                 bytes[start] = (byte) ((i >> 24) & 0xFF);
+                 bytes[start + 1] = (byte) ((i >> 16) & 0xFF);
+                 bytes[start + 2] = (byte) ((i >> 8) & 0xFF);
+                 bytes[start + 3] = (byte) ((i) & 0xFF);
+        }
+    }
+
+    public static byte[] toBytes(final long i) {
+        return toBytes(i, LITTLE);
+    }
+    public static byte[] toBytes(final long i, final Endiannes endiannes) {
+        byte[] out = new byte[Long.BYTES];
+        toBytes(i, out, 0, endiannes);
+        return out;
+    }
+    public static void toBytes(final long i, final byte[] bytes, final Endiannes endiannes) {
+        toBytes(i,  bytes, 0, endiannes);
+    }
+    public static void toBytes(final long i, final byte[] bytes, final int start, final Endiannes endiannes) {
+        if (bytes == null || endiannes == null) throw new IllegalArgumentException();
+        switch (endiannes) {
+            case LITTLE:
+                 bytes[start] = (byte) (i & 0xFF);
+                 bytes[start + 1] = (byte) ((i >> 8) & 0xFF);
+                 bytes[start + 2] = (byte) ((i >> 16) & 0xFF);
+                 bytes[start + 3] = (byte) ((i >> 24) & 0xFF);
+                 bytes[start + 4] = (byte) ((i >> 32) & 0xFF);
+                 bytes[start + 5] = (byte) ((i >> 40) & 0xFF);
+                 bytes[start + 6] = (byte) ((i >> 48) & 0xFF);
+                 bytes[start + 7] = (byte) ((i >> 56) & 0xFF);
+                return;
+            case BIG:
+                 bytes[start] = (byte) ((i >> 56) & 0xFF);
+                 bytes[start + 1] = (byte) ((i >> 48) & 0xFF);
+                 bytes[start + 2] = (byte) ((i >> 40) & 0xFF);
+                 bytes[start + 3] = (byte) ((i >> 32) & 0xFF);
+                 bytes[start + 4] = (byte) ((i >> 24) & 0xFF);
+                 bytes[start + 5] = (byte) ((i >> 16) & 0xFF);
+                 bytes[start + 6] = (byte) ((i >> 8) & 0xFF);
+                 bytes[start + 7] = (byte) ((i) & 0xFF);
+        }
+    }
+    
+    public static byte toInt8(final byte[] bytes, final int start) {
+        return (byte) ( bytes[start] & 0xff);
+    }
+    public static short toInt16(final byte[] bytes, final Endiannes endiannes) {
+        return toInt16( bytes, 0, endiannes);
+    }
+    public static short toInt16(final byte[] bytes, final int start, final Endiannes endiannes) {
+        if (bytes == null || endiannes == null) throw new IllegalArgumentException();
+        switch (endiannes) {
+            case LITTLE:
+                return (short) (( bytes[start] & 0xFF) | ( bytes[start + 1] & 0xFF) << 8);
+            case BIG:
+                return (short) (( bytes[start + 1] & 0xFF) | ( bytes[start] & 0xFF) << 8);
+        }
+        return 0;
+    }
+
+    public static int toInt32(final byte[] bytes, final Endiannes endiannes) {
+        return toInt32( bytes, 0, endiannes);
+    }
+    public static int toInt32(final byte[] bytes, final int start, final Endiannes endiannes) {
+        if (bytes == null || endiannes == null) throw new IllegalArgumentException();
+        switch (endiannes) {
+            case LITTLE:
+                return ( bytes[start] & 0xFF) | ( bytes[start + 1] & 0xFF) << 8 | ( bytes[start + 2] & 0xFF) << 16 | ( bytes[start + 3] & 0xFF) << 24;
+            case BIG:
+                return ( bytes[start + 3] & 0xFF) | ( bytes[start + 2] & 0xFF) << 8 | ( bytes[start + 1] & 0xFF) << 16 | ( bytes[start] & 0xFF) << 24;
+        }
+        return 0;
+    }
+
+    public static long toInt64(final byte[] bytes, final Endiannes endiannes) {
+        return toInt64( bytes, 0, endiannes);
+    }
+    public static long toInt64(final byte[] bytes, final int start, final Endiannes endiannes) {
+        if (bytes == null || endiannes == null) throw new IllegalArgumentException();
+        switch (endiannes) {
+            case LITTLE:
+                return ((long)  bytes[start + 7] & 0xff) << 56 | ((long)  bytes[start + 6] & 0xff) << 48 | ((long)  bytes[start + 5] & 0xff) << 40 | ((long)  bytes[start + 4] & 0xff) << 32 | ((long)  bytes[start + 3] & 0xff) << 24 | ((long)  bytes[start + 2] & 0xff) << 16 | ((long)  bytes[start + 1] & 0xff) << 8 | ((long)  bytes[start] & 0xff);
+            case BIG:
+                return ((long)  bytes[start] & 0xff) << 56 | ((long)  bytes[start + 1] & 0xff) << 48 | ((long)  bytes[start + 2] & 0xff) << 40 | ((long)  bytes[start + 3] & 0xff) << 32 | ((long)  bytes[start + 4] & 0xff) << 24 | ((long)  bytes[start + 5] & 0xff) << 16 | ((long)  bytes[start + 6] & 0xff) << 8 | ((long)  bytes[start + 7] & 0xff);
+        }
+        return 0;
+    }
+    
+    public static byte[] xor(byte[] first, byte[] second) {
+        if (first == null || second == null) throw new IllegalArgumentException("Null Array");
+        int length = Math.min(first.length, second.length);
+        byte[] out = new byte[length];
+        for (int i = 0; i < length; i++)
             out[i] = (byte) (first[i] ^ second[i]);
         return out;
     }
-    public static byte[] UTF16LEtoBytes(String str) {
-        final int length = str.length();
-        final char[] buffer = new char[length];
-        str.getChars(0, length, buffer, 0);
-        final byte[] b = new byte[length*2];
-        for (int j = 0; j < length; j++) {
-            b[j*2] = (byte) (buffer[j] & 0xFF);
-            b[j*2+1] = (byte) (buffer[j] >> 8);
-        }
-        return b;
-    }
-
-
-    public static byte[] UTF8toBytes(String str) {
-        final int length = str.length();
-        final char[] buffer = new char[length];
-        final byte[] b = new byte[length];
-        str.getChars(0, length, buffer, 0);
-        for (int j = 0; j < length; j++) {
-            b[j] = (byte) (buffer[j] & 0xFF);
-        }
-        return b;
-    }
-    public static byte[] reverse(byte[] esrever) {
-        int i = 0;
-        int j = esrever.length - 1;
+    public static byte[] reverse(final byte[] bytes) {
+        if (bytes == null) throw new IllegalArgumentException();
+        byte[] out = new byte[bytes.length];
+        System.arraycopy( bytes, 0, out, 0, out.length);
+        int i = 0, j = out.length - 1;
         byte tmp;
         while (j > i) {
-            tmp = esrever[j];
-            esrever[j] = esrever[i];
-            esrever[i] = tmp;
+            tmp = out[j];
+            out[j] = out[i];
+            out[i] = tmp;
             j--;
             i++;
         }
-        return esrever;
+        return out;
     }
-    @Deprecated
-    public static void print(byte[] data) {
-        System.out.print("Hex value: ");
-        for (byte b : data) {
-            System.out.printf("%02x", b & 0xFF);
+    public static boolean isEquals(final byte[] first, final byte[] second) {
+        return Arrays.equals(first, second);
+    }
+    
+    public static String toString(final byte[] bytes) {
+        return toString( bytes, StringType.HEX);
+    }
+    public static String toString(final byte[] bytes, StringType type) {
+        try {
+            switch (type) {
+                case ASCII:
+                case UTF8:
+                    return Strings.utf8FromBytes(bytes);
+                case HEX:
+                    return Strings.hexFromBytes(bytes);
+                case UTF16BE:
+                    return Strings.utf16FromBytes( bytes, BIG);
+                case UTF16LE:
+                    return Strings.utf16FromBytes( bytes, Endiannes.LITTLE);
+            }
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
         }
-        System.out.println();
+        return null;
     }
+    
+    public static byte[] fromString(final String str) {
+        return fromString(str, StringType.HEX);
+    }
+    public static byte[] fromString(final String str, StringType type) {
+        switch (type) {
+            case UTF8:
+            case ASCII:
+                return Strings.utf8toBytes(str);
+            case UTF16BE:
+                return Strings.utf16toBytes(str, BIG);
+            case UTF16LE:
+                return Strings.utf16toBytes(str, Endiannes.LITTLE);
+            case HEX:
+                return Strings.hexToBytes(str);
+        }
+        return null;
+    }
+    
+    private static class Strings {
+        private static byte[] utf16toBytes(final String str, final Endiannes endiannes) {
+            if (str == null) throw new IllegalArgumentException();
+            final int length = str.length();
+            final char[] buffer = new char[length];
+            str.getChars(0, length, buffer, 0);
+            final byte[] bytes = new byte[length * 2];
+            for (int j = 0; j < length; j++) {
+                switch (endiannes) {
+                    case LITTLE:
+                         bytes[j * 2] = (byte) (buffer[j] & 0xFF);
+                         bytes[j * 2 + 1] = (byte) (buffer[j] >> 8);
+                        break;
+                    case BIG:
+                         bytes[j * 2 + 1] = (byte) (buffer[j] & 0xFF);
+                         bytes[j * 2] = (byte) (buffer[j] >> 8);
+                        break;
+                }
+            }
+            return bytes;
+        }
 
-    public static String toString(byte[] data) {
-        StringBuilder out = new StringBuilder();
-        for (byte b : data) {
-            out.append(String.format("%02x", b & 0xFF));
+        private static byte[] utf8toBytes(final String str) { //ASCII TABLE
+            if (str == null) throw new IllegalArgumentException();
+            final int length = str.length();
+            final char[] buffer = new char[length];
+            final byte[] bytes = new byte[length];
+            str.getChars(0, length, buffer, 0);
+            for (int j = 0; j < length; j++) {
+                 bytes[j] = (byte) (buffer[j] & 0xFF);
+            }
+            return bytes;
         }
-        return out+"\n";
+
+        private static byte[] hexToBytes(final String encoded) {
+            if (encoded == null || encoded.length() == 0) return new byte[0];
+            Matcher matcher = hexString.matcher(encoded);
+            if (!matcher.matches()) return new byte[0];
+            int length = encoded.length();
+            if ((length % 2) != 0) length--;
+            if (length == 0) {
+                try {
+                    return new byte[]{(byte) Integer.parseInt(encoded, 16)};
+                } catch (NumberFormatException e) {
+                    throw new IllegalArgumentException(e);
+                }
+            }
+            final byte[] bytes = new byte[length >> 1];
+            final char[] chars = encoded.toCharArray();
+            for (int i = 0; i < length; i += 2) {
+                try {
+                    bytes[i >> 1] = (byte) Integer.parseInt(String.valueOf(chars[i]) + chars[i + 1], 16);
+                } catch (NumberFormatException e) {
+                    throw new IllegalArgumentException(e);
+                }
+            }
+            return bytes;
+        }
+
+        private static String utf8FromBytes(final byte[] bytes) throws UnsupportedEncodingException { //ASCII TABLE
+            return new String( bytes, StandardCharsets.UTF_8);
+        }
+
+        private static String utf16FromBytes(final byte[] bytes, final Endiannes endiannes) throws UnsupportedEncodingException {
+            switch (endiannes) {
+                case LITTLE:
+                    return new String( bytes, StandardCharsets.UTF_16BE);
+                case BIG:
+                    return new String( bytes, StandardCharsets.UTF_16LE);
+            }
+            return null;
+        }
+
+        private static String hexFromBytes(final byte[] bytes) {
+            if (bytes == null) throw new IllegalArgumentException();
+            StringBuilder sb = new StringBuilder();
+            for (final byte b : bytes) {
+                sb.append(String.format("%02X", b & 0xFF));
+            }
+            return sb.toString();
+        }
     }
 }

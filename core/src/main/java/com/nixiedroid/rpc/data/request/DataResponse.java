@@ -2,6 +2,7 @@ package com.nixiedroid.rpc.data.request;
 
 import com.nixiedroid.rpc.data.Data;
 import com.nixiedroid.rpc.util.ByteArrayUtils;
+import com.nixiedroid.rpc.util.Endiannes;
 
 public class DataResponse extends Data {
 
@@ -15,10 +16,10 @@ public class DataResponse extends Data {
 
     @Override
     public DataResponse deserialize(byte[] data,int size) {
-       alloc_hint = ByteArrayUtils.ranged.toUInt32L(data,0);
-       uuidId = ByteArrayUtils.ranged.toUInt16L(data, 4);
-       cancelCount = ByteArrayUtils.ranged.toUInt8(data,6);
-       padLen = ByteArrayUtils.ranged.toUInt8(data,7);
+       alloc_hint = ByteArrayUtils.toInt32(data,0, Endiannes.LITTLE);
+       uuidId = ByteArrayUtils.toInt16(data, 4, Endiannes.LITTLE);
+       cancelCount = ByteArrayUtils.toInt8(data,6);
+       padLen = ByteArrayUtils.toInt8(data,7);
        payloadSize = data.length - SIZE;
        payload = new byte[payloadSize];
        System.arraycopy(data,8,payload,0,payloadSize);
@@ -29,10 +30,10 @@ public class DataResponse extends Data {
     public byte[] serialize() {
         alloc_hint = payload.length;
         byte[] packed = new byte[size()];
-        System.arraycopy(ByteArrayUtils.uInt32ToBytesL(alloc_hint),0,packed,0,4);
-        System.arraycopy(ByteArrayUtils.uInt16ToBytesL(uuidId), 0, packed, 4, 2);
-        packed[6] = ByteArrayUtils.uByteToByte(cancelCount);
-        packed[7] = ByteArrayUtils.uByteToByte(padLen);
+        System.arraycopy(ByteArrayUtils.toBytes(alloc_hint),0,packed,0,4);
+        System.arraycopy(ByteArrayUtils.toBytes(uuidId), 0, packed, 4, 2);
+        packed[6] = (byte) cancelCount;
+        packed[7] = (byte) padLen;
         System.arraycopy(payload,0,packed,8,payloadSize);
         return packed;
     }

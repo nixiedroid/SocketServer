@@ -50,8 +50,8 @@ public class ClientDataProcess {
                 .withFlags(new PacketFlagsHolder(PacketFlag.FIRSTFRAG,PacketFlag.LASTFRAG,PacketFlag.MULTIPLEX))
                 .withRepresentation(0x10)
                 .withCallId(2) //TODO wrong number
-                .withAuthLen(0)
-                .withFragLen(250)
+                .withAuthLen((short) 0)
+                .withFragLen((short) 250)
                 .build();
 
         DataBind request = new DataBind.Builder()
@@ -64,7 +64,7 @@ public class ClientDataProcess {
         return requestBytes;
     }
     public static byte[] processRequest(byte[] data) {
-        if ((data.length - Header.SIZE)<0) return ByteArrayUtils.fromHexString("BAAD"); //TODO
+        if ((data.length - Header.SIZE)<0) return ByteArrayUtils.fromString("BAAD"); //TODO
         byte[] chunk = new byte[data.length - Header.SIZE];
         Header header = new Header(data);
         System.arraycopy(data, Header.SIZE, chunk, 0, chunk.length);

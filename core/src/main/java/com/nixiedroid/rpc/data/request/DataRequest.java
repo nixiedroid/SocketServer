@@ -3,6 +3,7 @@ package com.nixiedroid.rpc.data.request;
 import com.nixiedroid.rpc.data.Data;
 import com.nixiedroid.rpc.data.enums.PacketFlagsHolder;
 import com.nixiedroid.rpc.util.ByteArrayUtils;
+import com.nixiedroid.rpc.util.Endiannes;
 
 public class DataRequest extends Data {
     public static final int SIZE = 24;
@@ -19,9 +20,9 @@ public class DataRequest extends Data {
 
     @Override
     public DataRequest deserialize(byte[] data,int start) {
-        allocHint = ByteArrayUtils.ranged.toUInt32L(data, 0);
-        uuidId = ByteArrayUtils.ranged.toUInt16L(data, 4);
-        opName = ByteArrayUtils.ranged.toUInt16L(data, 6);
+        allocHint = ByteArrayUtils.toInt32(data, 0, Endiannes.LITTLE);
+        uuidId = ByteArrayUtils.toInt16(data, 4, Endiannes.LITTLE);
+        opName = ByteArrayUtils.toInt16(data, 6, Endiannes.LITTLE);
         byte[] dataChunk;
         dataLen = getHeader().getFragLen() - getHeader().getAuthLen() - DataRequest.SIZE;
         dataLen -= (getHeader().getAuthLen() > 0) ? 8 : 0;

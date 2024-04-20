@@ -1,10 +1,9 @@
 package com.nixiedroid.rpc.server;
 
 import com.nixiedroid.rpc.Program;
+import com.nixiedroid.rpc.data.Header;
 import com.nixiedroid.rpc.data.ResponseGenerator;
 import com.nixiedroid.rpc.util.ByteArrayUtils;
-import com.nixiedroid.rpc.util.ByteArrayUtilz;
-import com.nixiedroid.rpc.util.StreamUtils;
 
 import java.io.*;
 import java.net.Socket;
@@ -28,7 +27,18 @@ public class ClientThread extends Thread {
     public void run() {
         try {
             while (!isInterrupted()) {
-                byte[] response = process(new DataInputStream(in));
+                byte[] response;
+                try {
+                    Header header = getHeader(in);
+                    int dataSize = header.getFragLen() - Header.SIZE;
+                    byte[] data = new byte[dataSize];
+                    if (in.read(data) != dataSize) throw new EOFException();
+                    response = process(data,header);
+                } catch (EOFException e) {
+                    response = new byte[0];
+                }
+
+
                 out.write(response, 0, response.length);
                 out.flush();
                 waitLoop();
@@ -70,10 +80,22 @@ public class ClientThread extends Thread {
         }
     }
 
-    private byte[] process(DataInputStream stream) throws IOException {
+    private Header getHeader(BufferedInputStream inputStream) throws IOException {
+        byte[] headerBytes = new byte[Header.SIZE];
+        for (int i = 0; i < headerBytes.length; i++) {
+            int avail = inputStream.available();
+            if (avail < 1) throw new EOFException("Too few Data");
+            int bite = inputStream.read();
+            if (bite == -1) throw new EOFException("Too few Data");
+            headerBytes[i] = (byte) (bite & 0xFF);
+        }
+        return new Header(headerBytes);
+    }
+
+    private byte[] process(byte[] data,Header header) throws IOException {
         byte[] response;
-        Program.log().debug("Received data package: " + StreamUtils.toString(stream));
-        response = ResponseGenerator.generateResponse(new DataInputStream(stream));
+        Program.log().debug("Received data package: " + ByteArrayUtils.toString(data));
+        response = ResponseGenerator.generateResponse(data,header);
         Program.log().debug("Response data package: " + ByteArrayUtils.toString(response));
         return response;
     }

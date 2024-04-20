@@ -4,51 +4,48 @@ import com.nixiedroid.rpc.data.enums.PacketFlagsHolder;
 import com.nixiedroid.rpc.data.enums.PduTypeHolder.PduType;
 import com.nixiedroid.rpc.data.enums.PduTypeHolder;
 import com.nixiedroid.rpc.util.ByteArrayUtils;
-
-import java.io.DataInputStream;
-import java.io.IOException;
+import com.nixiedroid.rpc.util.Endiannes;
 
 
-public class Header  {//implements   BytePackable<Header> {
+public class Header  implements   BytePackable<Header> {
     public static final int SIZE = 16;
     int major; //Byte
     int minor; //Byte
     PduType type; //Byte
     PacketFlagsHolder flags; //Byte
-    long representation; //Little endian unsigned long (4bytes)
-    int fragLen; //little endian unsigned short (2bytes) TOTAL MESSAGE SIZE in bytes, INCLUDING HEADER
-    int authLen; //little endian unsigned short
-    long callId; //Little endian unsigned long (4bytes)
+    int representation; //Little endian unsigned long (4bytes)
+    short fragLen; //little endian unsigned short (2bytes) TOTAL MESSAGE SIZE in bytes, INCLUDING HEADER
+    short authLen; //little endian unsigned short
+    int callId; //Little endian unsigned long (4bytes)
 
-    public Header() {
-    }
+    public Header() {}
 
-    public Header(DataInputStream data) throws IOException {
+    public Header(byte[] data)  {
         deserialize(data, 0);
     }
 
-    public Header deserialize(DataInputStream stream, int start) throws IOException {
-        major = stream.readByte();
-        minor = stream.readByte();
-        this.type = PduTypeHolder.get(stream.readByte());
+    public Header deserialize(byte[] data, int start)  {
+        major = data[0];
+        minor = data[1];
+        this.type = PduTypeHolder.get(data[2]);
         flags = new PacketFlagsHolder().deserialize(data,3);
-        representation = ByteArrayUtils.ranged.toUInt32L(data, 4);
-        fragLen = ByteArrayUtils.ranged.toUInt16L(data, 8);
-        authLen = ByteArrayUtils.ranged.toUInt16L(data, 10);
-        callId = ByteArrayUtils.ranged.toUInt32L(data, 12);
+        representation = ByteArrayUtils.toInt32(data, 4, Endiannes.LITTLE);
+        fragLen = ByteArrayUtils.toInt16(data, 8, Endiannes.LITTLE);
+        authLen = ByteArrayUtils.toInt16(data, 10, Endiannes.LITTLE);
+        callId = ByteArrayUtils.toInt32(data, 12, Endiannes.LITTLE);
         return this;
     }
 
     public byte[] serialize() {
         byte[] packed = new byte[16];
-        packed[0] = ByteArrayUtils.uByteToByte(major);
-        packed[1] = ByteArrayUtils.uByteToByte(minor);
-        packed[2] = ByteArrayUtils.uByteToByte(PduTypeHolder.get(type));
+        packed[0] = (byte) major;
+        packed[1] = (byte) minor;
+        packed[2] = (byte) PduTypeHolder.get(type);
         packed[3] = flags.serialize()[0];
-        System.arraycopy(ByteArrayUtils.uInt32ToBytesL(representation), 0, packed, 4, 4);
-        System.arraycopy(ByteArrayUtils.uInt16ToBytesL(fragLen), 0, packed, 8, 2);
-        System.arraycopy(ByteArrayUtils.uInt16ToBytesL(authLen), 0, packed, 10, 2);
-        System.arraycopy(ByteArrayUtils.uInt32ToBytesL(callId), 0, packed, 12, 4);
+        System.arraycopy(ByteArrayUtils.toBytes(representation), 0, packed, 4, 4);
+        System.arraycopy(ByteArrayUtils.toBytes(fragLen), 0, packed, 8, 2);
+        System.arraycopy(ByteArrayUtils.toBytes(authLen), 0, packed, 10, 2);
+        System.arraycopy(ByteArrayUtils.toBytes(callId), 0, packed, 12, 4);
         return packed;
     }
 
@@ -72,19 +69,19 @@ public class Header  {//implements   BytePackable<Header> {
         return flags;
     }
 
-    public long getRepresentation() {
+    public int getRepresentation() {
         return representation;
     }
 
-    public int getFragLen() {
+    public short getFragLen() {
         return fragLen;
     }
 
-    public int getAuthLen() {
+    public short getAuthLen() {
         return authLen;
     }
 
-    public long getCallId() {
+    public int getCallId() {
         return callId;
     }
 
@@ -109,19 +106,19 @@ public class Header  {//implements   BytePackable<Header> {
             header.flags = flags;
             return this;
         }
-        public Builder withRepresentation(long representation){
+        public Builder withRepresentation(int representation){
             header.representation = representation;
             return this;
         }
         public Builder withFragLen(int len){
-            header.fragLen = len;
+            header.fragLen = (short) len;
             return this;
         }
         public Builder withAuthLen(int authLen){
-            header.authLen = authLen;
+            header.authLen = (short) authLen;
             return this;
         }
-        public Builder withCallId(long id){
+        public Builder withCallId(int id){
             header.callId = id;
             return this;
         }

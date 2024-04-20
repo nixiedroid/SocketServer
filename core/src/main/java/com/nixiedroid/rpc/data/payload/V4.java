@@ -7,7 +7,7 @@ import com.nixiedroid.rpc.util.ByteArrayUtils;
 
 public class V4 {
 
-    static byte[] key =  ByteArrayUtils.fromHexString(Program.config().getKeyV4());
+    static byte[] key =  ByteArrayUtils.fromString(Program.config().getKeyV4());
     public static byte[] handle(byte[] data, GenericPayload header){
         Program.log().info("Received V4 request");
         Payload payload = decode(data,header.minor);
@@ -44,8 +44,8 @@ public class V4 {
     private static Payload decode(byte[] data, int minor) {
         byte[] hash = new byte[16];
         byte[] request = new byte[data.length - 12];
-        System.arraycopy(ByteArrayUtils.uInt16ToBytesL(minor), 0, request, 0, 2);
-        System.arraycopy(ByteArrayUtils.uInt16ToBytesL(4), 0, request, 2, 2);
+        System.arraycopy(ByteArrayUtils.toBytes(minor), 0, request, 0, 2);
+        System.arraycopy(ByteArrayUtils.toBytes(4), 0, request, 2, 2);
         System.arraycopy(data, 0, request, 4, request.length-4);
         System.arraycopy(data, data.length-16, hash, 0, hash.length);
         Payload payload = new Payload().deserialize(request,0);

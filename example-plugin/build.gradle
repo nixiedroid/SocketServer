@@ -2,8 +2,8 @@ plugins {
     id 'java'
 }
 java {
-    sourceCompatibility = "5"
-    targetCompatibility = "5"
+    sourceCompatibility = "8"
+    targetCompatibility = "8"
     group = 'com.nixiedroid.rpc'
     toolchain {
         languageVersion = JavaLanguageVersion.of(8)

@@ -2,12 +2,13 @@ package com.nixiedroid.rpc.data.payload;
 
 import com.nixiedroid.rpc.data.BytePackable;
 import com.nixiedroid.rpc.util.ByteArrayUtils;
+import com.nixiedroid.rpc.util.Endiannes;
 
 public class PayloadV5 implements BytePackable {
 
     public static final int SIZE = 12;
-    long dataLen1;
-    long dataLen2;
+    int dataLen1;
+    int dataLen2;
     int minor; //Little endian unsigned short (2bytes)
     int major; //Little endian unsigned short (2bytes)
     byte[] salt;
@@ -26,21 +27,21 @@ public class PayloadV5 implements BytePackable {
 
     @Override
     public PayloadV5 deserialize(byte[] data,int size) {
-        dataLen1 = ByteArrayUtils.ranged.toUInt32L(data, 0);
-        dataLen2 = ByteArrayUtils.ranged.toUInt16L(data, 4);
-        minor = ByteArrayUtils.ranged.toUInt16L(data,8);
-        major = ByteArrayUtils.ranged.toUInt16L(data,10);
+        dataLen1 = ByteArrayUtils.toInt32(data, 0, Endiannes.LITTLE);
+        dataLen2 = ByteArrayUtils.toInt16(data, 4, Endiannes.LITTLE);
+        minor = ByteArrayUtils.toInt16(data,8, Endiannes.LITTLE);
+        major = ByteArrayUtils.toInt16(data,10, Endiannes.LITTLE);
         return this;
     }
 
     @Override
     public byte[] serialize() {
         byte[] packed = new byte[size()];
-        System.arraycopy(ByteArrayUtils.uInt32ToBytesL(dataLen1), 0, packed, 0, 4);
-        System.arraycopy(ByteArrayUtils.uInt32ToBytesB(0x00000200L),0,packed,4,4);
-        System.arraycopy(ByteArrayUtils.uInt32ToBytesL(dataLen2), 0, packed, 8, 4);
-        System.arraycopy(ByteArrayUtils.uInt16ToBytesL(minor), 0, packed, 12, 2);
-        System.arraycopy(ByteArrayUtils.uInt16ToBytesL(major), 0, packed, 14, 2);
+        System.arraycopy(ByteArrayUtils.toBytes(dataLen1,Endiannes.LITTLE), 0, packed, 0, 4);
+        System.arraycopy(ByteArrayUtils.toBytes(0x200,Endiannes.BIG),0,packed,4,4);
+        System.arraycopy(ByteArrayUtils.toBytes(dataLen2,Endiannes.LITTLE), 0, packed, 8, 4);
+        System.arraycopy(ByteArrayUtils.toBytes(minor,Endiannes.LITTLE), 0, packed, 12, 2);
+        System.arraycopy(ByteArrayUtils.toBytes(major,Endiannes.LITTLE), 0, packed, 14, 2);
         System.arraycopy(salt, 0, packed, 16, 16);
         System.arraycopy(crypted, 0, packed, 32, crypted.length);
         return packed;

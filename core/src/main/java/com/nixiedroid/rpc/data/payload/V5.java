@@ -17,7 +17,7 @@ public class V5 {
 
     public static byte[] handle(byte[] data, GenericPayload header, boolean v6) {
         String vStr = (v6) ? "6" : "5";
-        key = (v6) ? V6.key : ByteArrayUtils.fromHexString(Program.config().getKeyV5());
+        key = (v6) ? V6.key : ByteArrayUtils.fromString(Program.config().getKeyV5());
         Program.log().info("Received V" + vStr + " request");
         Program.log().verbose("Bytes: " + ByteArrayUtils.toString(data));
         Payload payload = decode(data, v6);
@@ -47,7 +47,7 @@ public class V5 {
         } catch (NoSuchMethodError e) {
             new Random().nextBytes(randomSalt);
         }
-        randomSalt = ByteArrayUtils.fromHexString("00000000000000000000000000000000");
+        randomSalt = ByteArrayUtils.fromString("00000000000000000000000000000000");
         try {
             digest = MessageDigest.getInstance("SHA-256");
             randomSaltSHA = digest.digest(randomSalt);

@@ -2,6 +2,7 @@ package com.nixiedroid.rpc.data.Bind;
 
 import com.nixiedroid.rpc.util.ByteArrayUtils;
 import com.nixiedroid.rpc.data.BytePackable;
+import com.nixiedroid.rpc.util.Endiannes;
 import com.nixiedroid.rpc.util.UUID;
 
 
@@ -20,20 +21,20 @@ public class UUIDItemResult implements BytePackable {
     }
     @Override
     public UUIDItemResult deserialize(byte[] data,int start) {
-        result = ByteArrayUtils.ranged.toUInt16L(data,0);
-        reason = ByteArrayUtils.ranged.toUInt16L(data,2);
+        result = ByteArrayUtils.toInt16(data,0, Endiannes.LITTLE);
+        reason = ByteArrayUtils.toInt16(data,2, Endiannes.LITTLE);
         System.arraycopy(transferUUID.uuid,0,data,4,16);
-        transferVer = ByteArrayUtils.ranged.toUInt32L(data, 20);
+        transferVer = ByteArrayUtils.toInt32(data, 20, Endiannes.LITTLE);
         return this;
     }
 
     @Override
     public byte[] serialize() {
         byte[] out = new byte[SIZE];
-        System.arraycopy(ByteArrayUtils.uInt16ToBytesL(result),0,out,0,2);
-        System.arraycopy(ByteArrayUtils.uInt16ToBytesL(reason),0,out,2,2);
+        System.arraycopy(ByteArrayUtils.toBytes(result),0,out,0,2);
+        System.arraycopy(ByteArrayUtils.toBytes(reason),0,out,2,2);
         System.arraycopy(transferUUID.uuid,0,out,4,16);
-        System.arraycopy(ByteArrayUtils.uInt32ToBytesL(transferVer), 0, out, 20, 4);
+        System.arraycopy(ByteArrayUtils.toBytes(transferVer), 0, out, 20, 4);
         return out;
     }
 

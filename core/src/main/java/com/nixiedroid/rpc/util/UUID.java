@@ -13,7 +13,7 @@ public class UUID implements BytePackable {
     }
 
     public static UUID cnv(String str){
-        return new UUID(convert(ByteArrayUtils.fromHexString(str)));
+        return new UUID(convert(ByteArrayUtils.fromString(str)));
     }
 
     private static byte[] convert(byte[] uuid) {

@@ -2,6 +2,7 @@ package com.nixiedroid.rpc.data.payload;
 
 import com.nixiedroid.rpc.data.BytePackable;
 import com.nixiedroid.rpc.util.ByteArrayUtils;
+import com.nixiedroid.rpc.util.Endiannes;
 
 
 public class Payload implements BytePackable {
@@ -24,17 +25,17 @@ public class Payload implements BytePackable {
 
     @Override
     public Payload deserialize(byte[] data,int start) {
-        minor = ByteArrayUtils.ranged.toUInt16L(data, 0);
-        major = ByteArrayUtils.ranged.toUInt16L(data, 2);
-        isClientVM = ByteArrayUtils.ranged.toUInt32L(data,4);
-        status = ByteArrayUtils.ranged.toUInt32L(data, 8);
-        graceTime = ByteArrayUtils.ranged.toUInt32L(data,12);
+        minor = ByteArrayUtils.toInt16(data, 0, Endiannes.LITTLE);
+        major = ByteArrayUtils.toInt16(data, 2, Endiannes.LITTLE);
+        isClientVM = ByteArrayUtils.toInt32(data,4, Endiannes.LITTLE);
+        status = ByteArrayUtils.toInt32(data, 8, Endiannes.LITTLE);
+        graceTime = ByteArrayUtils.toInt32(data,12, Endiannes.LITTLE);
         System.arraycopy(data, 16, appUUID, 0, 16);
         System.arraycopy(data, 32, skuUUID, 0, 16);
         System.arraycopy(data, 48, counterUUID, 0, 16);
         System.arraycopy(data, 64, cmUUID, 0, 16);
-        requiredClientCount = ByteArrayUtils.ranged.toUInt32L(data,80);
-        requestTime = ByteArrayUtils.ranged.toInt64L(data,84);
+        requiredClientCount = ByteArrayUtils.toInt32(data,80, Endiannes.LITTLE);
+        requestTime = ByteArrayUtils.toInt64(data,84,Endiannes.LITTLE);
         System.arraycopy(data, 92, prevUUID, 0, 16);
         return this;
     }

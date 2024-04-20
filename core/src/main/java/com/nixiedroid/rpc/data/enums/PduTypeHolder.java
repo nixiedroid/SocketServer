@@ -41,7 +41,7 @@ public final class PduTypeHolder {
         }
         return null;
     }
-
+ 
     public enum PduType {
         REQUEST, PING, RESPONSE, FAULT, WORKING, NOCALL, REJECT, ACK, CL_CANCEL, FACK, CANCELACK, BIND, BINDACK, BINDNAK, ALTER_CONTEXT, ALTER_CONTEXT_RESP, AUTH3, SHUTDOWN, CO_CANCEL, ORPHANED;
     }
