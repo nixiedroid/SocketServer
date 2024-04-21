@@ -8,15 +8,15 @@ import com.nixiedroid.rpc.util.UUID;
 
 public class UUIDItem implements BytePackable {
     public static final int SIZE = 44;
-    private int items;
-    private int contextID;
-    private int padding;
-    private UUID abstractUUID = new UUID(new byte[16]);
-    private int abstractVer;
-    private UUID transferUUID = new UUID(new byte[16]);
-    private int transferVer;
-    public UUIDItem(byte[] data) {
-       deserialize(data,0);
+    private short contextID; //2Bytes
+    private short items; //2Bytes
+    private UUID abstractUUID = new UUID(new byte[16]); //16bytes
+    private int abstractVer;//4 bytes
+    private UUID transferUUID = new UUID(new byte[16]);//16 bytes
+    private int transferVer;//4 bytes
+
+    public UUIDItem(byte[] data,int start) {
+       deserialize(data,start);
     }
 
     private UUIDItem() {
@@ -27,14 +27,13 @@ public class UUIDItem implements BytePackable {
     }
 
     @Override
-    public UUIDItem deserialize(byte[] data,int size) {
-        contextID = ByteArrayUtils.toInt16(data, 0, Endiannes.LITTLE);
-        items = data[2];
-        padding = data[3];
-        System.arraycopy(data, 4, abstractUUID.uuid, 0, 16);
-        abstractVer = ByteArrayUtils.toInt32(data, 20, Endiannes.LITTLE);
-        System.arraycopy(data, 24, transferUUID.uuid, 0, 16);
-        transferVer = ByteArrayUtils.toInt32(data, 40, Endiannes.LITTLE);
+    public UUIDItem deserialize(byte[] data,int start) {
+        contextID = ByteArrayUtils.toInt16(data, start, Endiannes.LITTLE);
+        items = ByteArrayUtils.toInt16(data, start+2, Endiannes.LITTLE);
+        abstractUUID.deserialize(data,start+4);
+        abstractVer = ByteArrayUtils.toInt32(data, start+20, Endiannes.LITTLE);
+        transferUUID.deserialize(data,start+24);
+        transferVer = ByteArrayUtils.toInt32(data, start+40, Endiannes.LITTLE);
         return this;
     }
 
@@ -42,8 +41,7 @@ public class UUIDItem implements BytePackable {
     public byte[] serialize() {
         byte[] packed = new byte[size()];
         System.arraycopy(ByteArrayUtils.toBytes(contextID),0,packed,0,2);
-        packed[2] = (byte) items;
-        packed[3] = (byte) padding;
+        System.arraycopy(ByteArrayUtils.toBytes(items),0,packed,0,2);
         System.arraycopy(abstractUUID.uuid, 0, packed, 4, 16);
         System.arraycopy(ByteArrayUtils.toBytes(abstractVer), 0, packed, 20, 4);
         System.arraycopy(transferUUID.uuid, 0, packed, 24, 16);
@@ -61,15 +59,11 @@ public class UUIDItem implements BytePackable {
         private UUIDItem item;
         public Builder() { item = new UUIDItem();}
         public Builder withCtxID(int id){
-            item.contextID = id;
+            item.contextID = (short) id;
             return this;
         }
         public Builder withItems(int items){
-            item.items = items;
-            return this;
-        }
-        public Builder withPadding(int padding){
-            item.padding = padding;
+            item.items = (short) items;
             return this;
         }
         public Builder withAbstract(UUID abstractUUID){

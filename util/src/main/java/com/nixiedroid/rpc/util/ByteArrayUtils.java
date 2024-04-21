@@ -199,7 +199,7 @@ public final class ByteArrayUtils {
                 case UTF16BE:
                     return Strings.utf16FromBytes( bytes, BIG);
                 case UTF16LE:
-                    return Strings.utf16FromBytes( bytes, Endiannes.LITTLE);
+                    return Strings.utf16FromBytes( bytes, LITTLE);
             }
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
@@ -218,7 +218,7 @@ public final class ByteArrayUtils {
             case UTF16BE:
                 return Strings.utf16toBytes(str, BIG);
             case UTF16LE:
-                return Strings.utf16toBytes(str, Endiannes.LITTLE);
+                return Strings.utf16toBytes(str, LITTLE);
             case HEX:
                 return Strings.hexToBytes(str);
         }

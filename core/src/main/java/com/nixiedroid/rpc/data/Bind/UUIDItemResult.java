@@ -19,6 +19,9 @@ public class UUIDItemResult implements BytePackable {
         this.transferUUID = uuid;
         this.transferVer = transferVer;
     }
+    public UUIDItemResult(byte[] data,int start){
+        deserialize(data,start);
+    }
     @Override
     public UUIDItemResult deserialize(byte[] data,int start) {
         result = ByteArrayUtils.toInt16(data,0, Endiannes.LITTLE);

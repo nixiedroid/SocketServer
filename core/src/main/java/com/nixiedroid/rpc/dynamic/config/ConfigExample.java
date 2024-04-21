@@ -76,4 +76,9 @@ public class ConfigExample extends ConfigStub{
     public String getAbstractUuid(){
         return "00000000000000000000000000000000";
     }
+
+    @Override
+    public void fillKeyMap() {
+
+    }
 }

@@ -26,9 +26,8 @@ public class PacketFlagsHolder implements BytePackable<PacketFlagsHolder> {
 
 
     public PacketFlagsHolder deserialize(byte[] data,int start) {
-        Set<PacketFlag> flags = new HashSet<PacketFlag>();
         for (PacketFlag fl: PacketFlag.values()) {
-            checkAndAdd(data[start],fl,flags);
+            checkAndAdd(data[start],fl);
         }
         return this;
     }
@@ -45,7 +44,7 @@ public class PacketFlagsHolder implements BytePackable<PacketFlagsHolder> {
         return flags.contains(flag);
     }
 
-    private void checkAndAdd(byte b,PacketFlag fl,Set<PacketFlag> flags){
+    private void checkAndAdd(byte b,PacketFlag fl){
          if ((b & map.get(fl)) !=0) flags.add(fl);
     }
 

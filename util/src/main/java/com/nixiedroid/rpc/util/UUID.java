@@ -1,10 +1,9 @@
 package com.nixiedroid.rpc.util;
 
-import com.nixiedroid.rpc.data.BytePackable;
 
 import java.util.Arrays;
 
-public class UUID implements BytePackable {
+public class UUID  {
 
     public byte[] uuid;
 
@@ -47,18 +46,16 @@ public class UUID implements BytePackable {
         return "UUID{" + "uuid=" + ByteArrayUtils.toString(uuid) + '}';
     }
 
-    @Override
+
     public UUID deserialize(byte[] data, int start) {
-        this.uuid = data;
+        System.arraycopy(data, start, this.uuid, 0, size());
         return this;
     }
 
-    @Override
     public byte[] serialize() {
         return uuid;
     }
 
-    @Override
     public int size() {
         return 16;
     }

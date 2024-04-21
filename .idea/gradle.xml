@@ -16,6 +16,8 @@
             <option value="$PROJECT_DIR$/example-plugin" />
             <option value="$PROJECT_DIR$/real-plugin" />
             <option value="$PROJECT_DIR$/rpc-impl" />
+            <option value="$PROJECT_DIR$/server" />
+            <option value="$PROJECT_DIR$/util" />
           </set>
         </option>
       </GradleProjectSettings>

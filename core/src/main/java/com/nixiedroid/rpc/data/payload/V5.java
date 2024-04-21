@@ -3,7 +3,7 @@ package com.nixiedroid.rpc.data.payload;
 import com.nixiedroid.rpc.AES.AES;
 import com.nixiedroid.rpc.AES.AesBlockModeImplementation;
 import com.nixiedroid.rpc.AES.AesCBCImplementation;
-import com.nixiedroid.rpc.Program;
+import com.nixiedroid.rpc.Context;
 import com.nixiedroid.rpc.util.ByteArrayUtils;
 
 import java.security.MessageDigest;
@@ -17,9 +17,9 @@ public class V5 {
 
     public static byte[] handle(byte[] data, GenericPayload header, boolean v6) {
         String vStr = (v6) ? "6" : "5";
-        key = (v6) ? V6.key : ByteArrayUtils.fromString(Program.config().getKeyV5());
-        Program.log().info("Received V" + vStr + " request");
-        Program.log().verbose("Bytes: " + ByteArrayUtils.toString(data));
+        key = (v6) ? V6.key : ByteArrayUtils.fromString(Context.config().getKeyV5());
+        Context.l().info("Received V" + vStr + " request");
+        Context.l().verbose("Bytes: " + ByteArrayUtils.toString(data));
         Payload payload = decode(data, v6);
         PayloadAck ack = ResponseGenerator.generateResponse(payload);
         PayloadV5 v5 = (v6) ? V6.encode(ack) : encode(ack);
@@ -72,10 +72,10 @@ public class V5 {
         }
 
         //Encrypt response
-        Program.log().verbose("To be encrypyed response bytes: " + ByteArrayUtils.toString(response));
+        Context.l().verbose("To be encrypyed response bytes: " + ByteArrayUtils.toString(response));
         aes = new AesCBCImplementation(key, ack.iv, false);
         byte[] out = aes.encrypt(response);
-        Program.log().verbose("Encrypyed response bytes: " + ByteArrayUtils.toString(out));
+        Context.l().verbose("Encrypyed response bytes: " + ByteArrayUtils.toString(out));
         return new PayloadV5(out, ack.iv, 0, 0);
     }
 

@@ -1,6 +1,8 @@
 package com.nixiedroid.rpc.AES;
 
 
+import java.io.ByteArrayInputStream;
+import java.util.Arrays;
 
 public class AesBlockModeImplementation extends AES {
     private final AESProcessor aes;
@@ -15,7 +17,7 @@ public class AesBlockModeImplementation extends AES {
         return aes.decrypt(data);
     }
     public AesBlockModeImplementation(byte[] key){
-        aes = new AESProcessor(key, false);
+        this(key,false);
     }
     public AesBlockModeImplementation(byte[] key, int rounds, boolean v6) {
         aes = new AESProcessor(key, rounds, v6);

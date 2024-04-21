@@ -1,6 +1,6 @@
 package com.nixiedroid.rpc.data.payload;
 
-import com.nixiedroid.rpc.Program;
+import com.nixiedroid.rpc.Context;
 
 public class PayloadHandler {
    public static byte[] process(byte [] data){
@@ -17,7 +17,7 @@ public class PayloadHandler {
            return V4.handle(chunk, header);
        }
        if (header.major == 0){
-           Program.log().verbose("Version is zero. This is, probably bug. Rehandling");
+           Context.l().verbose("Version is zero. This is, probably bug. Rehandling");
           return V0.handle(data);
        }
        else return Unknown.handle();

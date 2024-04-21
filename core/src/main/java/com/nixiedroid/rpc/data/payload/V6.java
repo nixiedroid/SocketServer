@@ -3,19 +3,18 @@ package com.nixiedroid.rpc.data.payload;
 import com.nixiedroid.rpc.AES.AES;
 import com.nixiedroid.rpc.AES.AesBlockModeImplementation;
 import com.nixiedroid.rpc.AES.AesCBCImplementation;
-import com.nixiedroid.rpc.Program;
+import com.nixiedroid.rpc.Context;
 import com.nixiedroid.rpc.util.ByteArrayUtils;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
-import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Random;
 
 public class V6 {
-    static byte[] key =  ByteArrayUtils.fromString(Program.config().getKeyV6());
+    static byte[] key =  ByteArrayUtils.fromString(Context.config().getKeyV6());
     static PayloadV5 encode(PayloadAck ack){
         //Objects
         AES aes;
@@ -25,7 +24,7 @@ public class V6 {
         final byte[] messageBytes = ack.serialize();
         int ackLen = messageBytes.length;
         int padding = 16 - (ackLen+88)%16;
-        byte[] hardwareId = ByteArrayUtils.fromString(Program.settings().getHardwareID());
+        byte[] hardwareId = ByteArrayUtils.fromString(Context.settings().getHardwareID());
         byte[] randomSalt = new byte[16];
         byte[] randomSalt2 = new byte[16];
         byte[] macSalt = new byte[16];

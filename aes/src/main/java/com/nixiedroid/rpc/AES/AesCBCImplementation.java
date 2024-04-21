@@ -1,7 +1,5 @@
 package com.nixiedroid.rpc.AES;
 
-import java.util.Arrays;
-
 public class AesCBCImplementation extends AES {
     private final AESProcessor aes;
     private final byte[] iv;

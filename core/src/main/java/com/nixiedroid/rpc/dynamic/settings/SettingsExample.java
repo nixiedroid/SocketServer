@@ -7,7 +7,7 @@ public class SettingsExample extends SettingsStub {
     private String SOFTWARE_ID = null;
 
     private int PORT = 8080;
-    private LogLevel LOGLEVEL = LogLevel.DEBUG;
+    private int LOGLEVEL = LogLevel.DEBUG;
     private int PING_TIME = 0x42; //MINUTES
     private int DELAY_TIME = 0x4242; //MINUTES
     private int CLIENT_COUNT = 25;
@@ -15,12 +15,12 @@ public class SettingsExample extends SettingsStub {
     private int LANG_CODE = 1033;
 
     @Override
-    public LogLevel getLevel() {
+    public int getLevel() {
         return LOGLEVEL;
     }
 
     @Override
-    public void setLevel(LogLevel level) {
+    public void setLevel(int level) {
         this.LOGLEVEL = level;
     }
 

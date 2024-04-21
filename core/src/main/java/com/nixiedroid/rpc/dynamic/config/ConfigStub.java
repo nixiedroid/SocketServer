@@ -1,7 +1,14 @@
 package com.nixiedroid.rpc.dynamic.config;
 
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
 public abstract class ConfigStub {
+    public ConfigStub() {
+        fillKeyMap();
+    }
     public abstract String getKeyV1();
 
     public abstract String getKeyV2();
@@ -30,4 +37,14 @@ public abstract class ConfigStub {
 
     public abstract String getAbstractUuid();
 
+    public abstract void fillKeyMap();
+
+    public Map<String,String> keys = new HashMap<>();
+    public String getKey(String keyName){
+        for (Map.Entry<String,String> e: keys.entrySet()) {
+            if (e.getKey().equals(keyName)) return e.getValue();
+        }
+        return "";
+       // return keys.get(keyName);
+    }
 }

@@ -2,14 +2,15 @@ package com.nixiedroid.rpc.data.payload;
 
 import com.nixiedroid.rpc.AES.AES;
 import com.nixiedroid.rpc.AES.AesBlockModeImplementation;
-import com.nixiedroid.rpc.Program;
+import com.nixiedroid.rpc.Context;
 import com.nixiedroid.rpc.util.ByteArrayUtils;
 
 public class V4 {
 
-    static byte[] key =  ByteArrayUtils.fromString(Program.config().getKeyV4());
+    static byte[] key =  ByteArrayUtils.fromString(Context.config().getKey("KEYV4"));
+    //static byte[] key =  ByteArrayUtils.fromString(Context.config().getKeyV4());
     public static byte[] handle(byte[] data, GenericPayload header){
-        Program.log().info("Received V4 request");
+        Context.l().info("Received V4 request");
         Payload payload = decode(data,header.minor);
         PayloadAck ack = ResponseGenerator.generateResponse(payload);
         byte[] response = ack.serialize();

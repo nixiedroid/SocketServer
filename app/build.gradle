@@ -4,9 +4,13 @@ plugins {
     id 'application'
 }
 java {
-    group = 'com.nixiedroid.rpc'
     version = 'unspecified'
-
+    sourceCompatibility = "8"
+    targetCompatibility = "8"
+    group = 'com.nixiedroid.rpc'
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(8)
+    }
 }
 application  {
     mainClass = "com.nixiedroid.rpc.Main"
@@ -22,7 +26,11 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.rapid7.client:dcerpc:0.11.0'
+    implementation project(":aes")
+    implementation project(":util")
+    implementation project(':core')
+    runtimeOnly project(":real-plugin")
+    //   implementation 'com.rapid7.client:dcerpc:0.11.0'
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'

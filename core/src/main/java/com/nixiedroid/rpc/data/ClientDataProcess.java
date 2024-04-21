@@ -1,9 +1,8 @@
 package com.nixiedroid.rpc.data;
 
-import com.nixiedroid.rpc.Program;
+import com.nixiedroid.rpc.Context;
 import com.nixiedroid.rpc.data.Bind.BindProcess;
-import com.nixiedroid.rpc.data.Bind.PayloadBind;
-import com.nixiedroid.rpc.data.Bind.DataBind;
+import com.nixiedroid.rpc.data.Bind.BindRequest;
 import com.nixiedroid.rpc.data.Bind.UUIDItem;
 import com.nixiedroid.rpc.data.enums.PacketFlagsHolder;
 import com.nixiedroid.rpc.data.enums.PacketFlagsHolder.PacketFlag;
@@ -18,31 +17,22 @@ public class ClientDataProcess {
         UUIDItem item1 = new UUIDItem.Builder()
                 .withCtxID(0)
                 .withItems(1)
-                .withPadding(0)
-                .withAbstract(UUID.cnv(Program.config().getAbstractUuid()))
+                .withAbstract(UUID.cnv(Context.config().getAbstractUuid()))
                 .withAbstractVer(1)
-                .withTransfer(UUID.cnv(Program.config().getUuid32()))
+                .withTransfer(UUID.cnv(Context.config().getUuid32()))
                 .withTransferVer(2)
                 .build();
         UUIDItem item2 = new UUIDItem.Builder()
                 .withCtxID(1)
                 .withItems(1)
-                .withPadding(0)
-                .withAbstract(UUID.cnv(Program.config().getAbstractUuid()))
+                .withAbstract(UUID.cnv(Context.config().getAbstractUuid()))
                 .withAbstractVer(1)
-                .withTransfer(UUID.cnv(Program.config().getUuidTime()))
+                .withTransfer(UUID.cnv(Context.config().getUuidTime()))
                 .withTransferVer(1)
                 .build();
         UUIDItem[] items = new UUIDItem[2];
         items[0] = item1;
         items[1] = item2;
-        PayloadBind payload = new PayloadBind.Builder()
-                .withTXLen(5840)
-                .withRXLen(5840)
-                .withUuidNum(2)
-                .withMessageID(0)
-                .withUuidItems(items)
-                .build();
         Header header = new Header.Builder()
                 .withMajor(5)
                 .withMinor(0)
@@ -54,11 +44,15 @@ public class ClientDataProcess {
                 .withFragLen((short) 250)
                 .build();
 
-        DataBind request = new DataBind.Builder()
-                .withData(payload)
+        BindRequest request = new BindRequest.Builder()
+                .withTXLen(5840)
+                .withRXLen(5840)
+                .withUuidNum(2)
+                .withMessageID(0)
+                .withUuidItems(items)
                 .withHeader(header)
                 .build();
-      //  request.payloadBind = new PayloadBind();
+      //  request.bindRequestHeader = new BindRequestHeader();
         requestBytes = request.serialize();
 
         return requestBytes;

@@ -1,10 +1,10 @@
 plugins {
-    id 'java'
+    id 'java-library'
 }
 java {
     sourceCompatibility = "8"
     targetCompatibility = "8"
-    group = 'com.nixiedroid.rpc'
+    group = 'com.nixiedroid.rpc.util'
     toolchain {
         languageVersion = JavaLanguageVersion.of(8)
     }
@@ -15,12 +15,9 @@ repositories {
 
 compileJava {
     options.compilerArgs << "-Xlint:deprecation" << "-Xlint:unchecked"
-    //   options.compilerArgs << "--add-exports=java.base/jdk.internal.module=nixiedroid.dynamic.core"
 }
 
 dependencies {
-    implementation project(":aes")
-    implementation project(":util")
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'

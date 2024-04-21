@@ -52,12 +52,12 @@ public class Client {
 
     private static void process(byte[] data) throws IOException {
         byte[] response;
-        //Program.log().info("Received payloadBind package: " + ByteArrayUtils.toString(payloadBind));
+        //Context.log().info("Received bindRequestHeader package: " + ByteArrayUtils.toString(bindRequestHeader));
         response = ClientDataProcess.processRequest(data);
-        // Program.log().info("Response payloadBind package: " + ByteArrayUtils.toString(response));
+        // Context.log().info("Response bindRequestHeader package: " + ByteArrayUtils.toString(response));
         out.write(response, 0, response.length);
         out.flush();
-        // Program.log().info("Request - Response sequence end");
+        // Context.log().info("Request - Response sequence end");
     }
 
     public static void generateRequest() throws IOException {
