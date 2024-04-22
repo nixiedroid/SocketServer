@@ -1,4 +1,4 @@
-package com.nixiedroid.rpc.data.payload;
+package com.nixiedroid.rpc.data.request.payload;
 
 import com.nixiedroid.rpc.AES.AES;
 import com.nixiedroid.rpc.AES.AesBlockModeImplementation;
@@ -17,7 +17,7 @@ public class V5 {
 
     public static byte[] handle(byte[] data, GenericPayload header, boolean v6) {
         String vStr = (v6) ? "6" : "5";
-        key = (v6) ? V6.key : ByteArrayUtils.fromString(Context.config().getKeyV5());
+        key = (v6) ? V6.key : ByteArrayUtils.fromString(Context.config().getKey("KEYV5"));
         Context.l().info("Received V" + vStr + " request");
         Context.l().verbose("Bytes: " + ByteArrayUtils.toString(data));
         Payload payload = decode(data, v6);

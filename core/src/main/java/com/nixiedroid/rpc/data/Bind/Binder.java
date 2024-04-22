@@ -3,6 +3,9 @@ package com.nixiedroid.rpc.data.Bind;
 
 import com.nixiedroid.rpc.Context;
 import com.nixiedroid.rpc.data.*;
+import com.nixiedroid.rpc.data.Bind.dto.BindRequest;
+import com.nixiedroid.rpc.data.Bind.dto.BindRequestACK;
+import com.nixiedroid.rpc.data.Bind.dto.UUIDItemResult;
 import com.nixiedroid.rpc.data.enums.PacketFlagsHolder;
 import com.nixiedroid.rpc.util.UUID;
 import com.nixiedroid.rpc.data.enums.PacketFlagsHolder.PacketFlag;
@@ -12,11 +15,11 @@ import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class BindProcess {
+public class Binder {
     public static byte[] handle(byte[] data, Header header){
-        BindRequest request = BindProcess.decodeBindRequest(data, header);
-        BindRequestACK acknowledge = BindProcess.generateResponse(request);
-        return BindProcess.encode(acknowledge);
+        BindRequest request = Binder.decodeBindRequest(data, header);
+        BindRequestACK acknowledge = Binder.generateResponse(request);
+        return Binder.encode(acknowledge);
     }
     private static BindRequest decodeBindRequest(byte[] data, Header header) {
         BindRequest request = new BindRequest();
@@ -38,8 +41,8 @@ public class BindProcess {
             type = (PduType.BINDACK);
             flags.add(PacketFlag.MULTIPLEX);
             flags.addAll(reqHeader.getFlags().get());
-            acknowledge.portLength = String.valueOf(Context.settings().getServerPort()).length() + 1;
-            byte[] port = new byte[acknowledge.portLength];
+            acknowledge.setPortLength(String.valueOf(Context.settings().getServerPort()).length() + 1);
+            byte[] port = new byte[acknowledge.getPortLength()];
             String portStr = Integer.toString(Context.settings().getServerPort());
             byte[] portShort;
             try {
@@ -47,13 +50,13 @@ public class BindProcess {
             } catch ( UnsupportedEncodingException e){
                 throw new RuntimeException(e);
             }
-            System.arraycopy(portShort, 0, port, 0, acknowledge.portLength-1);
-            acknowledge.port = port;
-            fragLen = (36 + request.uuidNum * UUIDItemResult.SIZE);
+            System.arraycopy(portShort, 0, port, 0, acknowledge.getPortLength()-1);
+            acknowledge.setPort(port);
+            fragLen = (36 + request.getUuidNum() * UUIDItemResult.SIZE);
         } else if (reqHeader.getType() == PduType.ALTER_CONTEXT) {
             type = (PduType.ALTER_CONTEXT_RESP) ;
-            acknowledge.portLength = 0;
-            fragLen = (32 + request.uuidNum * UUIDItemResult.SIZE);
+            acknowledge.setPortLength(0);
+            fragLen = (32 + request.getUuidNum() * UUIDItemResult.SIZE);
         } else throw new IllegalArgumentException("Unknown request type for bind like handler: " + reqHeader.getType());
         Header ackHeader = new Header.Builder()
                 .withMajor(reqHeader.getMajor())
@@ -66,38 +69,50 @@ public class BindProcess {
                 .withFragLen((short) fragLen).build();
 
         acknowledge.setHeader(ackHeader);
-        acknowledge.maxTXLen = request.maxTXLen;
-        acknowledge.maxRXLen = request.maxRXLen;
-        acknowledge.messageId = 0x1063bf3f;
-        acknowledge.uuidNum = request.uuidNum;
+        acknowledge.setMaxRXLen(request.getMaxRXLen());
+        acknowledge.setMaxTXLen(request.getMaxTXLen());
+        acknowledge.setMessageId(0x1063bf3f);
+        acknowledge.setUuidNum(request.getUuidNum());
         Map<UUID, UUIDItemResult> prepared = new HashMap<UUID,UUIDItemResult>();
         if (reqHeader.getType() == PduType.BIND) {
 
-            for (int i = 0; i < request.uuidNum; i++) {
-                if (UUID.cnv(Context.config().getUuid64()).equals(request.uuidItems[i].getTransferUUID())) {
-                    prepared.put(UUID.cnv(Context.config().getUuid32()), new UUIDItemResult(2, 2, UUID.cnv(Context.config().getUuidEmpty()), 0));
-                    prepared.put(UUID.cnv(Context.config().getUuid64()), new UUIDItemResult(0, 0, UUID.cnv(Context.config().getUuid64()), 1));
-                    prepared.put(UUID.cnv(Context.config().getUuidTimeA()), new UUIDItemResult(3, 3, UUID.cnv(Context.config().getUuidEmpty()), 0));
+            for (int i = 0; i < request.getUuidNum(); i++) {
+                if (UUID.cnv(Context.config().getKey("UUID64")).equals(request.getUuidItems()[i].getTransferUUID())) {
+                    prepared.put(UUID.cnv(Context.config().getKey("UUID32")),
+                            new UUIDItemResult(2, 2,
+                                    UUID.cnv(Context.config().getKey("UUIDEmpty")), 0));
+                    prepared.put(UUID.cnv(Context.config().getKey("UUID64")),
+                            new UUIDItemResult(0, 0,
+                                    UUID.cnv(Context.config().getKey("UUID64")), 1));
+                    prepared.put(UUID.cnv(Context.config().getKey("UUIDTimeA")),
+                            new UUIDItemResult(3, 3,
+                                    UUID.cnv(Context.config().getKey("UUIDEmpty")), 0));
                     break;
                 } else {
-                    prepared.put(UUID.cnv(Context.config().getUuid32()), new UUIDItemResult(0, 0, UUID.cnv(Context.config().getUuid32()), 2));
-                    prepared.put(UUID.cnv(Context.config().getUuid64()), new UUIDItemResult(2, 2, UUID.cnv(Context.config().getUuidEmpty()), 0));
-                    prepared.put(UUID.cnv(Context.config().getUuidTimeA()), new UUIDItemResult(3, 3, UUID.cnv(Context.config().getUuidEmpty()), 0));
+                    prepared.put(UUID.cnv(Context.config().getKey("UUID32")),
+                            new UUIDItemResult(0, 0, UUID.cnv(Context.config().getKey("UUID32")), 2));
+                    prepared.put(UUID.cnv(Context.config().getKey("UUID64")),
+                            new UUIDItemResult(2, 2, UUID.cnv(Context.config().getKey("UUIDEmpty")), 0));
+                    prepared.put(UUID.cnv(Context.config().getKey("UUIDTimeA")),
+                            new UUIDItemResult(3, 3, UUID.cnv(Context.config().getKey("UUIDEmpty")), 0));
                 }
             }
 
         } else if (reqHeader.getType() == PduType.ALTER_CONTEXT) {
-            prepared.put(UUID.cnv(Context.config().getUuid32()), new UUIDItemResult(0, 0, UUID.cnv(Context.config().getUuid32()), 2));
+            prepared.put(UUID.cnv(Context.config().getKey("UUID32")),
+                    new UUIDItemResult(0, 0, UUID.cnv(Context.config().getKey("UUID32")), 2));
         }
-        acknowledge.uuidItemResults = new UUIDItemResult[acknowledge.uuidNum];
-        for (int i = 0; i < request.uuidNum; i++) {
-            UUID tuuid = request.uuidItems[i].getTransferUUID();
+         UUIDItemResult[] uuidItemResults = new UUIDItemResult[acknowledge.getUuidNum()];
+        for (int i = 0; i < request.getUuidNum(); i++) {
+            UUID tuuid = request.getUuidItems()[i].getTransferUUID();
             UUIDItemResult response = prepared.get(tuuid);
-            acknowledge.uuidItemResults[i] = response;
+            uuidItemResults[i] = response;
             if (reqHeader.getType() == PduType.ALTER_CONTEXT) {
-                acknowledge.uuidItemResults[i] = new UUIDItemResult(0, 0, UUID.cnv(Context.config().getUuid32()), 2);
+                uuidItemResults[i] = new UUIDItemResult(0, 0,
+                        UUID.cnv(Context.config().getKey("UUID32")), 2);
             }
         }
+        acknowledge.setUuidItemResults(uuidItemResults);
         return acknowledge;
     }
     private static byte[] encode(BindRequestACK acknowledge) {

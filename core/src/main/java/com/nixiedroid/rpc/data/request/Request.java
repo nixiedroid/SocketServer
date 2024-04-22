@@ -5,7 +5,7 @@ import com.nixiedroid.rpc.data.enums.PacketFlagsHolder;
 import com.nixiedroid.rpc.util.ByteArrayUtils;
 import com.nixiedroid.rpc.util.Endiannes;
 
-public class DataRequest extends Data {
+public class Request extends Data {
     public static final int SIZE = 24;
     long allocHint;
     int uuidId;
@@ -19,12 +19,12 @@ public class DataRequest extends Data {
    // int padLen; //=(4 - ((SIZE + ((flags & 0x80) > 0)?16:0 + pduData.length()) & 3) & 3)
 
     @Override
-    public DataRequest deserialize(byte[] data,int start) {
+    public Request deserialize(byte[] data, int start) {
         allocHint = ByteArrayUtils.toInt32(data, 0, Endiannes.LITTLE);
         uuidId = ByteArrayUtils.toInt16(data, 4, Endiannes.LITTLE);
         opName = ByteArrayUtils.toInt16(data, 6, Endiannes.LITTLE);
         byte[] dataChunk;
-        dataLen = getHeader().getFragLen() - getHeader().getAuthLen() - DataRequest.SIZE;
+        dataLen = getHeader().getFragLen() - getHeader().getAuthLen() - Request.SIZE;
         dataLen -= (getHeader().getAuthLen() > 0) ? 8 : 0;
         if (getHeader().getFlags().checkFlag(PacketFlagsHolder.PacketFlag.OBJECTUUID)){
             uuidLength = 16;

@@ -1,12 +1,12 @@
-package com.nixiedroid.rpc.data.payload;
+package com.nixiedroid.rpc.data.request.payload;
 
 import com.nixiedroid.rpc.Context;
 
 public class PayloadHandler {
    public static byte[] process(byte [] data){
-       byte[] chunk = new byte[data.length - GenericPayload.SIZE];
        GenericPayload header = new GenericPayload(data);
-       System.arraycopy(data, GenericPayload.SIZE, chunk, 0,chunk.length );
+       byte[] chunk = new byte[data.length - header.size()];
+       System.arraycopy(data, header.size(), chunk, 0,chunk.length );
        if (header.major == 6){
          return V5.handle(chunk,header,true);
        } else
@@ -16,12 +16,7 @@ public class PayloadHandler {
        if (header.major == 4) {
            return V4.handle(chunk, header);
        }
-       if (header.major == 0){
-           Context.l().verbose("Version is zero. This is, probably bug. Rehandling");
-          return V0.handle(data);
-       }
-       else return Unknown.handle();
-     //  return Unknown.handle();
+       return Unknown.handle();
    }
 
    }

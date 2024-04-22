@@ -1,7 +1,7 @@
 package com.nixiedroid.rpc.data;
 
 
-import com.nixiedroid.rpc.data.Bind.BindProcess;
+import com.nixiedroid.rpc.data.Bind.Binder;
 import com.nixiedroid.rpc.data.request.RequestProcess;
 import com.nixiedroid.rpc.util.ByteArrayUtils;
 import com.nixiedroid.rpc.util.StringType;
@@ -13,7 +13,7 @@ public class ResponseGenerator {
         switch (header.type){
             case ALTER_CONTEXT:
             case BIND:
-                return BindProcess.handle(data,header);
+                return Binder.handle(data,header);
             case REQUEST:
                 return RequestProcess.handle(data,header);
             default:

@@ -1,9 +1,9 @@
 package com.nixiedroid.rpc.data;
 
 import com.nixiedroid.rpc.Context;
-import com.nixiedroid.rpc.data.Bind.BindProcess;
-import com.nixiedroid.rpc.data.Bind.BindRequest;
-import com.nixiedroid.rpc.data.Bind.UUIDItem;
+import com.nixiedroid.rpc.data.Bind.Binder;
+import com.nixiedroid.rpc.data.Bind.dto.BindRequest;
+import com.nixiedroid.rpc.data.Bind.dto.UUIDItem;
 import com.nixiedroid.rpc.data.enums.PacketFlagsHolder;
 import com.nixiedroid.rpc.data.enums.PacketFlagsHolder.PacketFlag;
 import com.nixiedroid.rpc.data.enums.PduTypeHolder.PduType;
@@ -17,17 +17,17 @@ public class ClientDataProcess {
         UUIDItem item1 = new UUIDItem.Builder()
                 .withCtxID(0)
                 .withItems(1)
-                .withAbstract(UUID.cnv(Context.config().getAbstractUuid()))
+                .withAbstract(UUID.cnv(Context.config().getKey("ABSTRACTUUID")))
                 .withAbstractVer(1)
-                .withTransfer(UUID.cnv(Context.config().getUuid32()))
+                .withTransfer(UUID.cnv(Context.config().getKey("UUID32")))
                 .withTransferVer(2)
                 .build();
         UUIDItem item2 = new UUIDItem.Builder()
                 .withCtxID(1)
                 .withItems(1)
-                .withAbstract(UUID.cnv(Context.config().getAbstractUuid()))
+                .withAbstract(UUID.cnv(Context.config().getKey("ABSTRACTUUID")))
                 .withAbstractVer(1)
-                .withTransfer(UUID.cnv(Context.config().getUuidTime()))
+                .withTransfer(UUID.cnv(Context.config().getKey("UUIDTime")))
                 .withTransferVer(1)
                 .build();
         UUIDItem[] items = new UUIDItem[2];
@@ -63,7 +63,7 @@ public class ClientDataProcess {
         Header header = new Header(data);
         System.arraycopy(data, Header.SIZE, chunk, 0, chunk.length);
         if (header.getType() == PduType.ALTER_CONTEXT || header.getType()  == PduType.BIND) {
-            return BindProcess.handle(chunk, header);
+            return Binder.handle(chunk, header);
         } else
         if (header.getType()  == PduType.REQUEST) {
             return RequestProcess.handle(chunk, header);

@@ -1,4 +1,4 @@
-package com.nixiedroid.rpc.data.payload;
+package com.nixiedroid.rpc.data.request.payload;
 
 import com.nixiedroid.rpc.AES.AES;
 import com.nixiedroid.rpc.AES.AesBlockModeImplementation;
@@ -8,7 +8,6 @@ import com.nixiedroid.rpc.util.ByteArrayUtils;
 public class V4 {
 
     static byte[] key =  ByteArrayUtils.fromString(Context.config().getKey("KEYV4"));
-    //static byte[] key =  ByteArrayUtils.fromString(Context.config().getKeyV4());
     public static byte[] handle(byte[] data, GenericPayload header){
         Context.l().info("Received V4 request");
         Payload payload = decode(data,header.minor);
@@ -44,7 +43,7 @@ public class V4 {
     }
     private static Payload decode(byte[] data, int minor) {
         byte[] hash = new byte[16];
-        byte[] request = new byte[data.length - 12];
+        byte[] request = new byte[data.length - GenericPayload.SIZE];
         System.arraycopy(ByteArrayUtils.toBytes(minor), 0, request, 0, 2);
         System.arraycopy(ByteArrayUtils.toBytes(4), 0, request, 2, 2);
         System.arraycopy(data, 0, request, 4, request.length-4);

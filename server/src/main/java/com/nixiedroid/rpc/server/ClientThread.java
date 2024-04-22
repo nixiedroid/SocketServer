@@ -1,8 +1,8 @@
 package com.nixiedroid.rpc.server;
 
-import com.nixiedroid.rpc.Program;
 import com.nixiedroid.rpc.data.Header;
 import com.nixiedroid.rpc.data.ResponseGenerator;
+import com.nixiedroid.rpc.Context;
 import com.nixiedroid.rpc.util.ByteArrayUtils;
 
 import java.io.*;
@@ -43,14 +43,14 @@ public class ClientThread extends Thread {
                 out.flush();
                 waitLoop();
             }
-            Program.log().info("Connection closed");
+            Context.l().info("Connection closed");
             socket.close();
         } catch (SocketException e) {
-            Program.log().err("Receiver unexpectedly closed connection");
-            Program.log().err(e.getMessage());
+            Context.l().err("Receiver unexpectedly closed connection");
+            Context.l().err(e.getMessage());
         } catch (IOException e) {
-            Program.log().err("Data stream failed");
-            Program.log().err(e.getMessage());
+            Context.l().err("Data stream failed");
+            Context.l().err(e.getMessage());
         } finally {
             try {
                 in.close();
@@ -94,9 +94,9 @@ public class ClientThread extends Thread {
 
     private byte[] process(byte[] data,Header header) throws IOException {
         byte[] response;
-        Program.log().debug("Received data package: " + ByteArrayUtils.toString(data));
+        Context.l().debug("Received data package: " + ByteArrayUtils.toString(data));
         response = ResponseGenerator.generateResponse(data,header);
-        Program.log().debug("Response data package: " + ByteArrayUtils.toString(response));
+        Context.l().debug("Response data package: " + ByteArrayUtils.toString(response));
         return response;
     }
 

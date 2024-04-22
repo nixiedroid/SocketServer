@@ -1,4 +1,4 @@
-package com.nixiedroid.rpc.data.Bind;
+package com.nixiedroid.rpc.data.Bind.dto;
 
 import com.nixiedroid.rpc.util.ByteArrayUtils;
 import com.nixiedroid.rpc.data.BytePackable;

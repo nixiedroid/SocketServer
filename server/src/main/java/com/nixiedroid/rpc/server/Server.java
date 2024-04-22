@@ -1,5 +1,6 @@
 package com.nixiedroid.rpc.server;
 
+import com.nixiedroid.rpc.Context;
 import com.nixiedroid.rpc.Program;
 
 import java.io.IOException;
@@ -32,20 +33,20 @@ public class Server {
 
     private void startServer() {
         try {
-            serverSocket = new ServerSocket(Program.settings().getServerPort());
-            Program.log().info("Server started on port: " + Program.settings().getServerPort());
+            serverSocket = new ServerSocket(Context.settings().getServerPort());
+           Context.l().info("Server started on port: " + Context.settings().getServerPort());
             do {
                 Socket clientSocket = serverSocket.accept();
-                Program.log().info("Connection Accepted " + clientSocket.getInetAddress() + " : " + clientSocket.getPort());
+                Context.l().info("Connection Accepted " + clientSocket.getInetAddress() + " : " + clientSocket.getPort());
                 ClientThread client = new ClientThread(clientSocket);
                 clientsList.add(client);
             } while (!Thread.currentThread().isInterrupted());
         } catch (IOException e) {
             if (serverSocket.isClosed()) {
-                Program.log().info("Server closed");
+                Context.l().info("Server closed");
             } else {
-                Program.log().err("Server dead!");
-                Program.log().err(e.getMessage());
+                Context.l().err("Server dead!");
+                Context.l().err(e.getMessage());
             }
 
         } finally {
@@ -64,7 +65,7 @@ public class Server {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        Program.log().info("Exit");
+        Context.l().info("Exit");
 
         for (ClientThread client : clientsList) {
             client.close();

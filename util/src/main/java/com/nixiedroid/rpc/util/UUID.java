@@ -10,6 +10,10 @@ public class UUID  {
     public UUID(byte[] uuid) {
         this.uuid = uuid;
     }
+    public UUID(byte[] data,int start){
+        uuid = new byte[16];
+        deserialize(data,start);
+    }
 
     public static UUID cnv(String str){
         return new UUID(convert(ByteArrayUtils.fromString(str)));

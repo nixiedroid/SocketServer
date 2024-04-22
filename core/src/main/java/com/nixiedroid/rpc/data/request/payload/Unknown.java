@@ -1,4 +1,4 @@
-package com.nixiedroid.rpc.data.payload;
+package com.nixiedroid.rpc.data.request.payload;
 
 import com.nixiedroid.rpc.Context;
 import com.nixiedroid.rpc.util.ByteArrayUtils;

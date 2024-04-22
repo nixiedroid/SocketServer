@@ -1,8 +1,7 @@
-package com.nixiedroid.rpc.data.Bind;
+package com.nixiedroid.rpc.data.Bind.dto;
 
 import com.nixiedroid.rpc.data.Data;
 import com.nixiedroid.rpc.data.Header;
-import com.nixiedroid.rpc.data.enums.PacketFlagsHolder;
 import com.nixiedroid.rpc.util.ByteArrayUtils;
 import com.nixiedroid.rpc.util.Endiannes;
 
@@ -25,6 +24,26 @@ public class BindRequest extends Data {
             this.uuidItems[i] = new UUIDItem(data,start+12 +i * UUIDItem.SIZE);
         }
         return this;
+    }
+
+    public short getMaxTXLen() {
+        return maxTXLen;
+    }
+
+    public short getMaxRXLen() {
+        return maxRXLen;
+    }
+
+    public int getMessageId() {
+        return messageId;
+    }
+
+    public int getUuidNum() {
+        return uuidNum;
+    }
+
+    public UUIDItem[] getUuidItems() {
+        return uuidItems;
     }
 
     @Override

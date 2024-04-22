@@ -1,4 +1,4 @@
-package com.nixiedroid.rpc.data.payload;
+package com.nixiedroid.rpc.data.request.payload;
 
 import com.nixiedroid.rpc.AES.AES;
 import com.nixiedroid.rpc.AES.AesBlockModeImplementation;
@@ -14,7 +14,7 @@ import java.security.SecureRandom;
 import java.util.Random;
 
 public class V6 {
-    static byte[] key =  ByteArrayUtils.fromString(Context.config().getKeyV6());
+    static byte[] key =  ByteArrayUtils.fromString(Context.config().getKey("KEYV6"));
     static PayloadV5 encode(PayloadAck ack){
         //Objects
         AES aes;

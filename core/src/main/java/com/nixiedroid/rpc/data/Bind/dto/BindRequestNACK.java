@@ -1,15 +1,15 @@
-package com.nixiedroid.rpc.data.Bind;
+package com.nixiedroid.rpc.data.Bind.dto;
 
 import com.nixiedroid.rpc.data.Data;
 import com.nixiedroid.rpc.util.ByteArrayUtils;
 import com.nixiedroid.rpc.util.Endiannes;
 
-public class DataBindNACK extends Data {
+public class BindRequestNACK extends Data {
     int rejectReason; //UInt 16 L
     byte[] supportedVersions = new byte[0];
 
     @Override
-    public DataBindNACK deserialize(byte[] data,int size) {
+    public BindRequestNACK deserialize(byte[] data, int size) {
         rejectReason = ByteArrayUtils.toInt16(data,0, Endiannes.LITTLE);
         if (data.length>2) {
             supportedVersions = new byte[data.length-2];

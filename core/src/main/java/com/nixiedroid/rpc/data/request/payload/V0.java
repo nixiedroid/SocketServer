@@ -1,4 +1,4 @@
-package com.nixiedroid.rpc.data.payload;
+package com.nixiedroid.rpc.data.request.payload;
 
 
 public class V0 {
