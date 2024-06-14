@@ -1,9 +1,18 @@
 package com.nixiedroid.rpc.dynamic.logger;
 
-public class LogLevel {
-   public static final int DEBUG = 0;
-    public static final int VERBOSE = 1;
-   public static final int INFO = 2;
-   public static final int ERROR = 3;
-   public static final int NONE = 4;
+public enum LogLevel {
+    DEBUG(0) ,
+    VERBOSE(1) ,
+    INFO(2) ,
+    ERROR(3) ,
+    NONE(10) ;
+    private int priority;
+
+    LogLevel(int priority) {
+        this.priority = priority;
+    }
+
+    public static boolean isLogging(LogLevel ctx, LogLevel level){
+        return ctx.priority <= level.priority;
+    }
 }

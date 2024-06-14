@@ -18,27 +18,27 @@ public class Logger {
     public void err(String s){
         if (isLogging(Context.level(),LogLevel.ERROR)) outputRoute.err(s);
     }
-    public void log(String s, int level){
+    public void log(String s, LogLevel level){
         if (isLogging(Context.level(),level)) {
             switch (level){
-                case LogLevel.DEBUG:
+                case DEBUG:
                     outputRoute.debug(s);
                     break;
-                case LogLevel.VERBOSE:
+                case VERBOSE:
                     outputRoute.verbose(s);
                     break;
-                case LogLevel.ERROR:
+                case ERROR:
                     outputRoute.err(s);
                     break;
-                case LogLevel.INFO:
+                case INFO:
                     outputRoute.debug(s);
                     break;
             }
 
         }
     }
-    private boolean isLogging(int current, int data){
-        return current <= data;
+    private boolean isLogging(LogLevel current, LogLevel data){
+        return LogLevel.isLogging(current,data);
     }
 
     public Logger(OutputRouteStub route){

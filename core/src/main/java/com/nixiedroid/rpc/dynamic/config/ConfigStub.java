@@ -1,6 +1,4 @@
 package com.nixiedroid.rpc.dynamic.config;
-
-
 import java.util.HashMap;
 import java.util.Map;
 

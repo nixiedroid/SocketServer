@@ -2,7 +2,7 @@ package com.nixiedroid.rpc.util;
 
 import java.text.SimpleDateFormat;
 
-public class Date {
+public final class Date {
     private static final String DATE_PATTERN = "HH:mm:ss" ;
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_PATTERN);
 

@@ -4,7 +4,7 @@ plugins {
     id 'application'
 }
 java {
-    version = 'unspecified'
+    version = '1'
     sourceCompatibility = "8"
     targetCompatibility = "8"
     group = 'com.nixiedroid.rpc'
@@ -13,7 +13,7 @@ java {
     }
 }
 application  {
-    mainClass = "com.nixiedroid.rpc.Main"
+    mainClass = "com.nixiedroid.rpc.Program"
 }
 
 compileJava {
@@ -26,11 +26,9 @@ repositories {
 }
 
 dependencies {
-    implementation project(":aes")
     implementation project(":util")
     implementation project(':core')
     runtimeOnly project(":real-plugin")
-    //   implementation 'com.rapid7.client:dcerpc:0.11.0'
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
@@ -41,7 +39,6 @@ jar {
         attributes(
                 "Implementation-Title": project.name,
                 "Implementation-Version": project.version,
-                //'Add-Opens': 'java.prefs/java.util.prefs',
                 "Main-Class": application.mainClass,
                 "Created-By"            : "Gradle ${gradle.gradleVersion}",
                 "Build-Timestamp"       : new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").format(new Date()),

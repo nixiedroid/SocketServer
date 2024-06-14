@@ -1,13 +1,11 @@
 package com.nixiedroid.rpc;
 
-import com.nixiedroid.rpc.dynamic.config.ConfigLoader;
+import com.nixiedroid.rpc.dynamic.Loader;
 import com.nixiedroid.rpc.dynamic.config.ConfigStub;
+import com.nixiedroid.rpc.dynamic.logger.LogLevel;
 import com.nixiedroid.rpc.dynamic.logger.Logger;
-import com.nixiedroid.rpc.dynamic.logger.OutputRouteLoader;
-import com.nixiedroid.rpc.dynamic.settings.SettingsLoader;
 import com.nixiedroid.rpc.dynamic.settings.SettingsStub;
 import com.nixiedroid.rpc.dynamic.sowftwareId.SoftwareIDGeneratorStub;
-import com.nixiedroid.rpc.dynamic.sowftwareId.SoftwareIDLoader;
 
 public class Context {
 
@@ -19,16 +17,17 @@ public class Context {
 
     private static SoftwareIDGeneratorStub softwareIDGenerator = null;
     private Logger logger = null;
-    private int maxLogLevel;
+    private LogLevel maxLogLevel;
     private static SettingsStub settings = null;
     private static ConfigStub config = null;
 
 
     private Context() {
-        Context.config = ConfigLoader.load(CUSTOM_CONFIG);
-        Context.settings = SettingsLoader.load(CUSTOM_SETTINGS);
-        Context.softwareIDGenerator = SoftwareIDLoader.load(CUSTOM_SID_GENERATOR);
-        this.logger = new Logger(OutputRouteLoader.load(CUSTOM_OUTPUT_ROUTE));
+        Loader l = new Loader();
+        Context.config = (ConfigStub) l.apply("Config");
+        Context.settings = (SettingsStub) l.apply("Settings");
+        Context.softwareIDGenerator = (SoftwareIDGeneratorStub) l.apply("Settings");
+        this.logger = (Logger) l.apply("Settings");
     }
     public static ConfigStub config(){
         return config;
@@ -41,7 +40,7 @@ public class Context {
         return softwareIDGenerator;
     }
 
-    public static int level(){
+    public static LogLevel level(){
         return i().maxLogLevel;
     }
 
