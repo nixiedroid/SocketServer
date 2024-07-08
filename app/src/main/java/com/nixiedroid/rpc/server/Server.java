@@ -1,11 +1,10 @@
 package com.nixiedroid.rpc.server;
 
 import com.nixiedroid.rpc.Context;
-import com.nixiedroid.rpc.Program;
+import com.nixiedroid.rpc.util.logger.Logger;
 
 import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.net.*;
 import java.util.LinkedList;
 
 public class Server {
@@ -22,31 +21,32 @@ public class Server {
     }
 
     public void startServerThread() {//Starting new thread, which will actually do the job
-        server = new Thread(new Runnable() {
-            public void run() {
-                startServer();
-            }
-        });
+        server = new Thread(this::startServer);
         server.start();
     }
 
 
     private void startServer() {
         try {
-            serverSocket = new ServerSocket(Context.settings().getServerPort());
-           Context.l().info("Server started on port: " + Context.settings().getServerPort());
+            int port = Context.settings().getServerPort();
+            InetAddress.getByAddress(new byte[4]);
+            serverSocket = new ServerSocket(port);
+            Logger.info("Server started on port: " + Context.settings().getServerPort());
             do {
                 Socket clientSocket = serverSocket.accept();
-                Context.l().info("Connection Accepted " + clientSocket.getInetAddress() + " : " + clientSocket.getPort());
+                clientSocket.setSendBufferSize(5840);
+                clientSocket.setReceiveBufferSize(5840);
+                clientSocket.setSoTimeout(500);
+                Logger.info("Connection Accepted " + clientSocket.getInetAddress() + " : " + clientSocket.getPort());
                 ClientThread client = new ClientThread(clientSocket);
                 clientsList.add(client);
             } while (!Thread.currentThread().isInterrupted());
         } catch (IOException e) {
             if (serverSocket.isClosed()) {
-                Context.l().info("Server closed");
+                Logger.info("Server closed");
             } else {
-                Context.l().err("Server dead!");
-                Context.l().err(e.getMessage());
+                Logger.err("Server dead!");
+                Logger.err(e.getMessage());
             }
 
         } finally {
@@ -65,7 +65,7 @@ public class Server {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        Context.l().info("Exit");
+        Logger.info("Exit");
 
         for (ClientThread client : clientsList) {
             client.close();

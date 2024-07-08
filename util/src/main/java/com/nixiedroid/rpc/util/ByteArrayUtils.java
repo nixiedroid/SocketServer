@@ -6,9 +6,6 @@ import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.nixiedroid.rpc.util.Endiannes.BIG;
-import static com.nixiedroid.rpc.util.Endiannes.LITTLE;
-
 public final class ByteArrayUtils {
 
     private static final Pattern hexString = Pattern.compile("[0-9a-fA-F]+");
@@ -26,7 +23,7 @@ public final class ByteArrayUtils {
     }
 
     public static byte[] toBytes(final short s) {
-        return toBytes(s, LITTLE);
+        return toBytes(s, Endiannes.LITTLE);
     }
     public static byte[] toBytes(final short s, final Endiannes endiannes) {
         byte[] out = new byte[Short.BYTES];
@@ -50,7 +47,7 @@ public final class ByteArrayUtils {
     }
 
     public static byte[] toBytes(final int i) {
-        return toBytes(i, LITTLE);
+        return toBytes(i, Endiannes.LITTLE);
     }
     public static byte[] toBytes(final int i, final Endiannes endiannes) {
         byte[] out = new byte[Integer.BYTES];
@@ -78,7 +75,7 @@ public final class ByteArrayUtils {
     }
 
     public static byte[] toBytes(final long i) {
-        return toBytes(i, LITTLE);
+        return toBytes(i, Endiannes.LITTLE);
     }
     public static byte[] toBytes(final long i, final Endiannes endiannes) {
         byte[] out = new byte[Long.BYTES];
@@ -197,9 +194,9 @@ public final class ByteArrayUtils {
                 case HEX:
                     return Strings.hexFromBytes(bytes);
                 case UTF16BE:
-                    return Strings.utf16FromBytes( bytes, BIG);
+                    return Strings.utf16FromBytes( bytes, Endiannes.BIG);
                 case UTF16LE:
-                    return Strings.utf16FromBytes( bytes, LITTLE);
+                    return Strings.utf16FromBytes( bytes, Endiannes.LITTLE);
             }
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
@@ -216,9 +213,9 @@ public final class ByteArrayUtils {
             case ASCII:
                 return Strings.utf8toBytes(str);
             case UTF16BE:
-                return Strings.utf16toBytes(str, BIG);
+                return Strings.utf16toBytes(str, Endiannes.BIG);
             case UTF16LE:
-                return Strings.utf16toBytes(str, LITTLE);
+                return Strings.utf16toBytes(str, Endiannes.LITTLE);
             case HEX:
                 return Strings.hexToBytes(str);
         }

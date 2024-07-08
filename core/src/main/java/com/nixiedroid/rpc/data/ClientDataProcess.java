@@ -11,23 +11,25 @@ import com.nixiedroid.rpc.data.request.RequestProcess;
 import com.nixiedroid.rpc.util.ByteArrayUtils;
 import com.nixiedroid.rpc.util.UUID;
 
+import static com.nixiedroid.rpc.dynamic.Key.*;
+
 public class ClientDataProcess {
     public static byte[] generateRequest(){
         byte[] requestBytes = new byte[8];
         UUIDItem item1 = new UUIDItem.Builder()
                 .withCtxID(0)
                 .withItems(1)
-                .withAbstract(UUID.cnv(Context.config().getKey("ABSTRACTUUID")))
+                .withAbstract(UUID.cnv(Context.config().getKey(ABSTRACT_UUID)))
                 .withAbstractVer(1)
-                .withTransfer(UUID.cnv(Context.config().getKey("UUID32")))
+                .withTransfer(UUID.cnv(Context.config().getKey(UUID32)))
                 .withTransferVer(2)
                 .build();
         UUIDItem item2 = new UUIDItem.Builder()
                 .withCtxID(1)
                 .withItems(1)
-                .withAbstract(UUID.cnv(Context.config().getKey("ABSTRACTUUID")))
+                .withAbstract(UUID.cnv(Context.config().getKey(ABSTRACT_UUID)))
                 .withAbstractVer(1)
-                .withTransfer(UUID.cnv(Context.config().getKey("UUIDTime")))
+                .withTransfer(UUID.cnv(Context.config().getKey(UUIDTime)))
                 .withTransferVer(1)
                 .build();
         UUIDItem[] items = new UUIDItem[2];

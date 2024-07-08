@@ -29,6 +29,7 @@ dependencies {
     implementation project(":util")
     implementation project(':core')
     runtimeOnly project(":real-plugin")
+    runtimeOnly project(":example-plugin")
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'

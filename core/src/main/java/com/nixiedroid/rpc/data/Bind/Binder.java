@@ -7,6 +7,7 @@ import com.nixiedroid.rpc.data.Bind.dto.BindRequest;
 import com.nixiedroid.rpc.data.Bind.dto.BindRequestACK;
 import com.nixiedroid.rpc.data.Bind.dto.UUIDItemResult;
 import com.nixiedroid.rpc.data.enums.PacketFlagsHolder;
+import com.nixiedroid.rpc.dynamic.Key;
 import com.nixiedroid.rpc.util.UUID;
 import com.nixiedroid.rpc.data.enums.PacketFlagsHolder.PacketFlag;
 import com.nixiedroid.rpc.data.enums.PduTypeHolder.PduType;
@@ -15,6 +16,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
+@SuppressWarnings("CharsetObjectCanBeUsed")
 public class Binder {
     public static byte[] handle(byte[] data, Header header){
         BindRequest request = Binder.decodeBindRequest(data, header);
@@ -77,30 +79,30 @@ public class Binder {
         if (reqHeader.getType() == PduType.BIND) {
 
             for (int i = 0; i < request.getUuidNum(); i++) {
-                if (UUID.cnv(Context.config().getKey("UUID64")).equals(request.getUuidItems()[i].getTransferUUID())) {
-                    prepared.put(UUID.cnv(Context.config().getKey("UUID32")),
+                if (UUID.cnv(Context.config().getKey(Key.UUID64)).equals(request.getUuidItems()[i].getTransferUUID())) {
+                    prepared.put(UUID.cnv(Context.config().getKey(Key.UUID32)),
                             new UUIDItemResult(2, 2,
-                                    UUID.cnv(Context.config().getKey("UUIDEmpty")), 0));
-                    prepared.put(UUID.cnv(Context.config().getKey("UUID64")),
+                                    UUID.cnv(Context.config().getKey(Key.UUIDEmpty)), 0));
+                    prepared.put(UUID.cnv(Context.config().getKey(Key.UUID64)),
                             new UUIDItemResult(0, 0,
-                                    UUID.cnv(Context.config().getKey("UUID64")), 1));
-                    prepared.put(UUID.cnv(Context.config().getKey("UUIDTimeA")),
+                                    UUID.cnv(Context.config().getKey(Key.UUID64)), 1));
+                    prepared.put(UUID.cnv(Context.config().getKey(Key.UUIDTimeA)),
                             new UUIDItemResult(3, 3,
-                                    UUID.cnv(Context.config().getKey("UUIDEmpty")), 0));
+                                    UUID.cnv(Context.config().getKey(Key.UUIDEmpty)), 0));
                     break;
                 } else {
-                    prepared.put(UUID.cnv(Context.config().getKey("UUID32")),
-                            new UUIDItemResult(0, 0, UUID.cnv(Context.config().getKey("UUID32")), 2));
-                    prepared.put(UUID.cnv(Context.config().getKey("UUID64")),
-                            new UUIDItemResult(2, 2, UUID.cnv(Context.config().getKey("UUIDEmpty")), 0));
-                    prepared.put(UUID.cnv(Context.config().getKey("UUIDTimeA")),
-                            new UUIDItemResult(3, 3, UUID.cnv(Context.config().getKey("UUIDEmpty")), 0));
+                    prepared.put(UUID.cnv(Context.config().getKey(Key.UUID32)),
+                            new UUIDItemResult(0, 0, UUID.cnv(Context.config().getKey(Key.UUID32)), 2));
+                    prepared.put(UUID.cnv(Context.config().getKey(Key.UUID64)),
+                            new UUIDItemResult(2, 2, UUID.cnv(Context.config().getKey(Key.UUIDEmpty)), 0));
+                    prepared.put(UUID.cnv(Context.config().getKey(Key.UUIDTimeA)),
+                            new UUIDItemResult(3, 3, UUID.cnv(Context.config().getKey(Key.UUIDEmpty)), 0));
                 }
             }
 
         } else if (reqHeader.getType() == PduType.ALTER_CONTEXT) {
-            prepared.put(UUID.cnv(Context.config().getKey("UUID32")),
-                    new UUIDItemResult(0, 0, UUID.cnv(Context.config().getKey("UUID32")), 2));
+            prepared.put(UUID.cnv(Context.config().getKey(Key.UUID32)),
+                    new UUIDItemResult(0, 0, UUID.cnv(Context.config().getKey(Key.UUID32)), 2));
         }
          UUIDItemResult[] uuidItemResults = new UUIDItemResult[acknowledge.getUuidNum()];
         for (int i = 0; i < request.getUuidNum(); i++) {
@@ -109,7 +111,7 @@ public class Binder {
             uuidItemResults[i] = response;
             if (reqHeader.getType() == PduType.ALTER_CONTEXT) {
                 uuidItemResults[i] = new UUIDItemResult(0, 0,
-                        UUID.cnv(Context.config().getKey("UUID32")), 2);
+                        UUID.cnv(Context.config().getKey(Key.UUID32)), 2);
             }
         }
         acknowledge.setUuidItemResults(uuidItemResults);

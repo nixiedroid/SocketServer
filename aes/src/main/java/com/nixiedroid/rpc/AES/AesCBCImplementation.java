@@ -1,7 +1,7 @@
 package com.nixiedroid.rpc.AES;
 
 public class AesCBCImplementation extends AES {
-    private final AESProcessor aes;
+
     private final byte[] iv;
     @Override
     public byte[] encrypt(byte[] data) {
@@ -30,16 +30,16 @@ public class AesCBCImplementation extends AES {
         return out;
     }
     public AesCBCImplementation(byte[] key, byte[] iv){
+        super(key);
         this.iv = iv;
-        aes = new AESProcessor(key, false);
     }
-    public AesCBCImplementation(byte[] key, int rounds,byte[] iv, boolean v6) {
+    public AesCBCImplementation(byte[] key, int rounds,byte[] iv, Mode mode) {
+        super(key,rounds,mode);
         this.iv = iv;
-        aes = new AESProcessor(key, rounds, v6);
     }
-    public AesCBCImplementation(byte[] key,byte[] iv, boolean v6){
+    public AesCBCImplementation(byte[] key,byte[] iv, Mode mode){
+        super(key, mode);
         this.iv = iv;
-        aes = new AESProcessor(key, v6);
     }
     private static byte[] xor(byte[] first, byte[] second){
         if (first.length != second.length) throw new IllegalArgumentException("Arrays must have equal length");

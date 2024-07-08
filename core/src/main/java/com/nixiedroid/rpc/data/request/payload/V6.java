@@ -3,6 +3,7 @@ package com.nixiedroid.rpc.data.request.payload;
 import com.nixiedroid.rpc.AES.AES;
 import com.nixiedroid.rpc.AES.AesBlockModeImplementation;
 import com.nixiedroid.rpc.AES.AesCBCImplementation;
+import com.nixiedroid.rpc.AES.Mode;
 import com.nixiedroid.rpc.Context;
 import com.nixiedroid.rpc.util.ByteArrayUtils;
 
@@ -13,8 +14,11 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Random;
 
+import static com.nixiedroid.rpc.dynamic.Key.HARDWARE_ID;
+import static com.nixiedroid.rpc.dynamic.Key.KEYV6;
+
 public class V6 {
-    static byte[] key =  ByteArrayUtils.fromString(Context.config().getKey("KEYV6"));
+    static byte[] key =  ByteArrayUtils.fromString(Context.config().getKey(KEYV6));
     static PayloadV5 encode(PayloadAck ack){
         //Objects
         AES aes;
@@ -24,7 +28,7 @@ public class V6 {
         final byte[] messageBytes = ack.serialize();
         int ackLen = messageBytes.length;
         int padding = 16 - (ackLen+88)%16;
-        byte[] hardwareId = ByteArrayUtils.fromString(Context.settings().getHardwareID());
+        byte[] hardwareId = ByteArrayUtils.fromString(Context.config().getKey(HARDWARE_ID));
         byte[] randomSalt = new byte[16];
         byte[] randomSalt2 = new byte[16];
         byte[] macSalt = new byte[16];
@@ -37,11 +41,7 @@ public class V6 {
             }
             SecureRandom.getInstanceStrong().nextBytes(randomSalt);
             SecureRandom.getInstanceStrong().nextBytes(randomSalt2);
-        } catch (NoSuchMethodError  e) {
-            new Random().nextBytes(hardwareId);
-            new Random().nextBytes(randomSalt2);
-            new Random().nextBytes(randomSalt);
-        } catch (NoSuchAlgorithmException e) {
+        } catch (NoSuchMethodError | NoSuchAlgorithmException e) {
             new Random().nextBytes(hardwareId);
             new Random().nextBytes(randomSalt2);
             new Random().nextBytes(randomSalt);
@@ -56,12 +56,12 @@ public class V6 {
         }
 
         //decrypt Request IV using key
-        aes = new AesBlockModeImplementation(key, true);
+        aes = new AesBlockModeImplementation(key, Mode.EXTRA);
         byte[] requestIV = aes.decrypt(ack.iv);
         byte[] randomStuff = ByteArrayUtils.xor(requestIV, randomSalt);
 
         //decrypt RandomSalt2 using key
-        aes = new AesCBCImplementation(key, randomSalt2, true);
+        aes = new AesCBCImplementation(key, randomSalt2, Mode.EXTRA);
         byte[] decryptedSalt2 = aes.decrypt(randomSalt2);
         byte[] hMac = ByteArrayUtils.xor(randomSalt2, decryptedSalt2);
 
@@ -86,7 +86,7 @@ public class V6 {
         }
 
         //Encrypt response
-        aes = new AesCBCImplementation (key, randomSalt2, true);
+        aes = new AesCBCImplementation (key, randomSalt2, Mode.EXTRA);
         requestIV = aes.encrypt(response);
         return new PayloadV5(requestIV, randomSalt2, 0, 0);
     }

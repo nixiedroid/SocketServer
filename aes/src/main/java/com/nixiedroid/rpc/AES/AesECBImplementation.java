@@ -1,7 +1,11 @@
 package com.nixiedroid.rpc.AES;
 
 public class AesECBImplementation extends AES {
-    private final AESProcessor aes;
+
+    public AesECBImplementation(byte[] key) {
+        super(key);
+    }
+
     @Override
     public byte[] encrypt(byte[] data) {
         if (data.length%16 != 0) throw new IllegalArgumentException("Data len must be divisible by 16");
@@ -22,11 +26,5 @@ public class AesECBImplementation extends AES {
         return out;
     }
 
-    public AesECBImplementation(byte[] key, int rounds, boolean v6) {
-        aes = new AESProcessor(key, rounds, v6);
-    }
 
-    public AesECBImplementation(byte[] key,  boolean v6) {
-        aes = new AESProcessor(key, v6);
-    }
 }

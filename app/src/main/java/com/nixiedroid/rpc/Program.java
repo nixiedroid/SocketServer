@@ -9,11 +9,6 @@ public class Program {
     private static boolean isInitialised = false;
 
     public static void main(String[] args) {
-        Context.i();
-        Program.start();
-    }
-    public static void init(){
-        Context.i();
         Program.start();
     }
 

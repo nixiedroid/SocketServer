@@ -9,10 +9,4 @@ public class Thrower {
     public static <E extends Throwable> void throwException(Throwable exc) throws E{
         throw (E)exc; //Throws actual exception
     }
-    public static <E extends Throwable> void throwExceptionAndDie(Throwable exc) throws E{
-        throw new Error(exc); //Throws actual exception
-    }
-    public static <E extends Throwable> void throwExceptionAndDie(String message) throws E{
-        throw new Error(message); //Throws actual exception
-    }
 }

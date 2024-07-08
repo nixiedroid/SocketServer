@@ -1,6 +1,7 @@
 package com.nixiedroid.rpc.AES;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 import static com.nixiedroid.rpc.AES.AESProcessor.C.*;
 
@@ -16,16 +17,17 @@ final class AESProcessor {
     private int limit = 0;
     private final int rounds;
 
-    AESProcessor(byte[] key, int rounds, boolean flag) {
+    AESProcessor(byte[] key, int rounds, Mode mode) {
         this.rounds = rounds;
-        makeSessionKey(key,flag);
+        makeSessionKey(key,mode);
     }
 
-    AESProcessor(byte[] key, boolean flag) {
-        this(key, 0, flag);
+    AESProcessor(byte[] key, Mode mode) {
+        this(key, 0, mode);
     }
 
-    private void makeSessionKey(byte[] k,boolean flag)  {
+    private void makeSessionKey(byte[] k,Mode mode)  {
+        if (k == null || mode == null) throw new NullPointerException();
 
         final int BC = 4;
         int ROUNDS = (rounds==0)?(k.length >> 2) + 6:rounds;
@@ -80,13 +82,13 @@ final class AESProcessor {
         }
 
         //
-        if (flag) {
-            Kd[(ROUNDS - 4)*BC] ^= (((byte) (0x73) << 24) & 0xff000000);
-            Kd[(ROUNDS - 6)*BC] ^= (((byte) (0x09) << 24) & 0xff000000);
-            Kd[(ROUNDS - 8)*BC] ^= (((byte) (0xe4) << 24) & 0xff000000);
-            Ke[(4)*BC] ^= (((byte) (0x73) << 24) & 0xff000000);
-            Ke[6*BC] ^= (((byte) (0x09) << 24) & 0xff000000);
-            Ke[8*BC] ^= (((byte) (0xe4) << 24) & 0xff000000);
+        if (mode == Mode.EXTRA) {
+            Kd[(ROUNDS - 4) * BC] ^= (((byte) (0x73) << 24) & 0xff000000);
+            Kd[(ROUNDS - 6) * BC] ^= (((byte) (0x09) << 24) & 0xff000000);
+            Kd[(ROUNDS - 8) * BC] ^= (((byte) (0xe4) << 24) & 0xff000000);
+            Ke[(4) * BC] ^= (((byte) (0x73) << 24) & 0xff000000);
+            Ke[6 * BC] ^= (((byte) (0x09) << 24) & 0xff000000);
+            Ke[8 * BC] ^= (((byte) (0xe4) << 24) & 0xff000000);
         }
         //
 

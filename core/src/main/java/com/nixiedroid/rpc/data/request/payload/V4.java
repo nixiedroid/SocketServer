@@ -2,14 +2,17 @@ package com.nixiedroid.rpc.data.request.payload;
 
 import com.nixiedroid.rpc.AES.AES;
 import com.nixiedroid.rpc.AES.AesBlockModeImplementation;
+import com.nixiedroid.rpc.AES.Mode;
 import com.nixiedroid.rpc.Context;
+import com.nixiedroid.rpc.dynamic.Key;
 import com.nixiedroid.rpc.util.ByteArrayUtils;
+import com.nixiedroid.rpc.util.logger.Logger;
 
 public class V4 {
 
-    static byte[] key =  ByteArrayUtils.fromString(Context.config().getKey("KEYV4"));
+    static byte[] key =  ByteArrayUtils.fromString(Context.config().getKey(Key.KEYV4));
     public static byte[] handle(byte[] data, GenericPayload header){
-        Context.l().info("Received V4 request");
+        Logger.info("Received V4 request");
         Payload payload = decode(data,header.minor);
         PayloadAck ack = ResponseGenerator.generateResponse(payload);
         byte[] response = ack.serialize();
@@ -22,7 +25,7 @@ public class V4 {
         }
     }
     private static byte[] generateHash(byte[] data){
-        AES aes = new AesBlockModeImplementation(key,11,false);
+        AES aes = new AesBlockModeImplementation(key,11, Mode.DEFAULT);
         int dataLen = data.length;
         byte[] lastblock = new byte[16];
         byte[] hashbuffer = new byte[16];
